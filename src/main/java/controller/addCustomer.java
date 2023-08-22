@@ -7,64 +7,49 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class addAppointmentController {
+public class addCustomer {
 
     @FXML
-    private Button addAppointmentCancelButton;
+    private TextField addCustomerAddress;
 
     @FXML
-    private ChoiceBox<?> addAppointmentContact;
+    private Button addCustomerCancelButton;
 
     @FXML
-    private ChoiceBox<?> addAppointmentCustomerID;
+    private ChoiceBox<?> addCustomerCountry;
 
     @FXML
-    private TextField addAppointmentDescription;
+    private TextField addCustomerID;
 
     @FXML
-    private DatePicker addAppointmentEndDate;
+    private TextField addCustomerName;
 
     @FXML
-    private ChoiceBox<?> addAppointmentEndTime;
+    private TextField addCustomerPhoneNumber;
 
     @FXML
-    private TextField addAppointmentID;
+    private Button addCustomerSaveButton;
 
     @FXML
-    private TextField addAppointmentLocation;
+    private ChoiceBox<?> addCustomerStateProvidence;
 
     @FXML
-    private Button addAppointmentSaveButton;
+    private AnchorPane addCustomerView;
 
     @FXML
-    private DatePicker addAppointmentStartDate;
+    private TextField addCustomerZipCode;
 
-    @FXML
-    private ChoiceBox<?> addAppointmentStartTime;
-
-    @FXML
-    private TextField addAppointmentTitle;
-
-    @FXML
-    private TextField addAppointmentType;
-
-    @FXML
-    private ChoiceBox<?> addAppointmentUserID;
-
-    @FXML
-    private AnchorPane addAppointmentView;
     Stage stage;
     Parent scene;
 
     @FXML
-    void onActionAddAppointmentCancel(ActionEvent event) throws IOException {
+    void onActionAddCustomerCancelButton(ActionEvent event) throws IOException {
         stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
         scene = FXMLLoader.load(getClass().getResource("/view/appointmentsMain.fxml"));
         stage.setScene(new Scene(scene));
@@ -72,7 +57,7 @@ public class addAppointmentController {
     }
 
     @FXML
-    void onActionAddAppointmentSaveButton(ActionEvent event) throws IOException {
+    void onActionAddCustomerSaveButton(ActionEvent event) throws IOException {
         stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
         scene = FXMLLoader.load(getClass().getResource("/view/appointmentsMain.fxml"));
         stage.setScene(new Scene(scene));
