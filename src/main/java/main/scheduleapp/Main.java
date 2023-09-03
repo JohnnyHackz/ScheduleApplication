@@ -1,13 +1,12 @@
 package main.scheduleapp;
 
+import helper.JDBC;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.Locale;
-import java.util.ResourceBundle;
 
 public class Main extends Application {
     @Override
@@ -21,17 +20,21 @@ public class Main extends Application {
 
 
     public static void main(String[] args) throws Exception{
-        //JDBC.openConnection();
-        //launch(args);
-        ResourceBundle rb = ResourceBundle.getBundle("language/loginPropPage", Locale.getDefault());
+        JDBC.openConnection();
+        launch(args);
+        /*ResourceBundle rb = ResourceBundle.getBundle("language/loginPropPage", Locale.getDefault());
 
         if (Locale.getDefault().getLanguage().equals("fr")){
             System.out.println(rb.getString("Login") + " " + rb.getString("again"));
         } else {System.out.println(rb.getString("Login") + " " + rb.getString("again"));
         }
 
-        ;
-        //JDBC.closeConnection();
+        */
+       /* UserDAOImpl userDAO = new UserDAOImpl();
+        for (User user : userDAO.getAllUsers()) {
+            System.out.println(user);
+        }*/
+        JDBC.closeConnection();
 
     }
 }

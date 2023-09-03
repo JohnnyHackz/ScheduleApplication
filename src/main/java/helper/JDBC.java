@@ -2,9 +2,12 @@ package helper;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 
 public class JDBC {
+    private static PreparedStatement preparedStatement;
     private static final String protocol = "jdbc";
     private static final String vendor = ":mysql:";
     private static final String location = "//localhost/";
@@ -31,6 +34,15 @@ public class JDBC {
 
     public static Connection getConnection(){
         return connection;
+    }
+
+    public static void setPreparedStatement(Connection conn, String sqlStatement) throws SQLException {
+        preparedStatement = conn.prepareStatement(sqlStatement);
+    }
+
+    public static PreparedStatement getPreparedStatement() {
+
+        return preparedStatement;
     }
 
     public static void closeConnection() {

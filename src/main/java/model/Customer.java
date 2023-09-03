@@ -2,20 +2,20 @@ package model;
 
 public class Customer {
 
-    private int custID;
+    private int customerId;
     private String custName;
     private String custAddress;
     private String custPostalCode;
     private String custPhoneNumber;
-    private int custDivisionID;
+    private int divisionId;
 
 
-    public int getCustID() {
-        return custID;
+    public int getCustomerID() {
+        return customerId;
     }
 
-    public void setCustID(int custID) {
-        this.custID = custID;
+    public void setCustomerID(int customerId) {
+        this.customerId = customerId;
     }
 
     public String getCustName() {
@@ -51,21 +51,21 @@ public class Customer {
     }
 
     public int getCustDivisionID() {
-        return custDivisionID;
+        return divisionId;
     }
 
-    public void setCustDivisionID(int custDivisionID) {
-        this.custDivisionID = custDivisionID;
+    public void setCustDivisionID(int divisionId) {
+        this.divisionId = divisionId;
     }
 
-    public Customer (int custID, String custName, String custAddress, String custPostalCode,
-                     String custPhoneNumber, int custDivisionID){
-        this.custID = custID;
+    public Customer (int customerID, String custName, String custAddress, String custPostalCode,
+                     String custPhoneNumber, int divisionId){
+        this.customerId = customerID;
         this.custName = custName;
         this.custAddress = custAddress;
         this.custPostalCode = custPostalCode;
         this.custPhoneNumber = custPhoneNumber;
-        this.custDivisionID = custDivisionID;
+        this.divisionId = divisionId;
 
     }
 

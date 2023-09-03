@@ -22,15 +22,15 @@
             <TableColumn fx:id="customerPostalCodeCol" prefWidth="150.0" text="Postal Code" />
          </columns>
       </TableView>
-      <TableView fx:id="mainScreenAppointmentsTable" layoutX="37.0" layoutY="80.0" prefHeight="200.0" prefWidth="900.0">
+      <TableView fx:id="mainScreenAppointmentsTable" layoutX="38.0" layoutY="80.0" prefHeight="192.0" prefWidth="924.0">
          <columns>
             <TableColumn fx:id="appIDCol" prefWidth="90.0" text="ID" />
             <TableColumn fx:id="appTitleCol" prefWidth="90.0" text="Title" />
             <TableColumn fx:id="appDescriptionCol" prefWidth="90.0" text="Description" />
             <TableColumn fx:id="appLocationCol" prefWidth="90.0" text="Location" />
             <TableColumn fx:id="appTypeCol" prefWidth="90.0" text="Type" />
-            <TableColumn fx:id="appStartDateTimeCol" prefWidth="250.0" text="Start Date/Time" />
-            <TableColumn fx:id="appEndDateTimeCol" prefWidth="112.0" text="End Date/Time" />
+            <TableColumn fx:id="appStartDateTimeCol" prefWidth="188.0" text="Start Date/Time" />
+            <TableColumn fx:id="appEndDateTimeCol" prefWidth="174.0" text="End Date/Time" />
             <TableColumn fx:id="appContactCol" prefWidth="89.0" text="Contact" />
             <TableColumn fx:id="appCustomerIdCol" prefWidth="96.0" text="Customer ID" />
             <TableColumn fx:id="appUserIdCol" prefWidth="92.0" text="User ID" />
@@ -46,9 +46,9 @@
             <Font size="18.0" />
          </font>
       </Label>
-      <Button layoutX="38.0" layoutY="286.0" mnemonicParsing="false" onAction="#onActionAppointmentAdd" text="Add" />
-      <Button layoutX="107.0" layoutY="286.0" mnemonicParsing="false" onAction="#onActionAppointmentUpdate" text="Update" />
-      <Button layoutX="210.0" layoutY="286.0" mnemonicParsing="false" onAction="#onActionAppointmentDelete" text="Delete" />
+      <Button layoutX="38.0" layoutY="289.0" mnemonicParsing="false" onAction="#onActionAppointmentAdd" text="Add" />
+      <Button layoutX="107.0" layoutY="289.0" mnemonicParsing="false" onAction="#onActionAppointmentUpdate" text="Update" />
+      <Button layoutX="210.0" layoutY="289.0" mnemonicParsing="false" onAction="#onActionAppointmentDelete" text="Delete" />
       <Button layoutX="38.0" layoutY="559.0" mnemonicParsing="false" onAction="#onActionCustomerAdd" text="Add" />
       <Button layoutX="107.0" layoutY="558.0" mnemonicParsing="false" onAction="#onActionCustomerUpdate" text="Update" />
       <Button layoutX="210.0" layoutY="558.0" mnemonicParsing="false" onAction="#onActionCustomersDelete" text="Delete" />

@@ -1,8 +1,10 @@
 package controller;
 
-import DAO.AppointmentDetailsDOA;
+import DAO.AppointmentDAO;
+import DAO.AppointmentDAOImpl;
+import DAO.CustomerDAO;
+import DAO.CustomerDAOImpl;
 import helper.JDBC;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -12,7 +14,6 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import model.Appointment;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -20,54 +21,33 @@ import java.sql.SQLException;
 public class appointmentsMainController {
 
 
-    Stage stage;
-    Parent scene;
-    @FXML
-    private ToggleGroup appointmentTG;
+    public TableView mainScreenCustomersTable;
+    public TableColumn customerIDCol;
+    public TableColumn customerNameCol;
+    public TableColumn customerAddressCol;
+    public TableColumn customerPhoneNumberCol;
+    public TableColumn customerStateCol;
+    public TableColumn customerPostalCodeCol;
+    public TableView mainScreenAppointmentsTable;
+    public TableColumn appIDCol;
+    public TableColumn appTitleCol;
+    public TableColumn appDescriptionCol;
+    public TableColumn appLocationCol;
+    public TableColumn appTypeCol;
+    public TableColumn appStartDateTimeCol;
+    public TableColumn appEndDateTimeCol;
+    public TableColumn appContactCol;
+    public TableColumn appCustomerIdCol;
+    public TableColumn appUserIdCol;
+    public RadioButton appointmentsCurrentWeek;
+    public ToggleGroup appointmentTG;
+    public RadioButton appointmentsCurrentMonth;
+    public RadioButton appointmentsAllAppointments;
     @FXML
     private AnchorPane AppointmentCustomersMain;
-    @FXML
-    private TableView mainScreenCustomersTable;
-    @FXML
-    private TableColumn customerIDCol;
-    @FXML
-    private TableColumn customerNameCol;
-    @FXML
-    private TableColumn customerAddressCol;
-    @FXML
-    private TableColumn customerPhoneNumberCol;
-    @FXML
-    private TableColumn customerPostalCodeCol;
-    @FXML
-    private TableColumn customerStateCol;
-    @FXML
-    private TableView mainScreenAppointmentsTable;
-    @FXML
-    private TableColumn appIDCol;
-    @FXML
-    private TableColumn appTitleCol;
-    @FXML
-    private TableColumn appDescriptionCol;
-    @FXML
-    private TableColumn appTypeCol;
-    @FXML
-    private TableColumn appLocationCol;
-    @FXML
-    private TableColumn appStartDateTimeCol;
-    @FXML
-    private TableColumn appEndDateTimeCol;
-    @FXML
-    private TableColumn appContactCol;
-    @FXML
-    private TableColumn appCustomerIdCol;
-    @FXML
-    private TableColumn appUserIdCol;
-    @FXML
-    private RadioButton appointmentsCurrentMonth;
-    @FXML
-    private RadioButton appointmentsAllAppointments;
-    @FXML
-    private RadioButton appointmentsCurrentWeek;
+
+    Stage stage;
+    Parent scene;
 
 
     private JDBC jdbc; //Initialize JDBC instance
@@ -107,7 +87,7 @@ public class appointmentsMainController {
         stage.show();
     }
 
-    public void onActionCustomersDelete(ActionEvent event){
+    public void onActionCustomersDelete(ActionEvent event) {
     }
 
     public void onActionReports(ActionEvent actionEvent) throws IOException {
@@ -133,25 +113,41 @@ public class appointmentsMainController {
     }
 
 
-
+    @FXML
     public void initialize() throws SQLException {
-        jdbc = new JDBC();
-        jdbc.openConnection();
 
-        ObservableList<Appointment> allAppointmentsList = AppointmentDetailsDOA.getAllAppointments(jdbc.getConnection());
+        System.out.println("Appointment Schedule (Main Menu): I am initialized!");
 
-        appIDCol.setCellValueFactory(new PropertyValueFactory<>("appID"));
-        appTitleCol.setCellValueFactory(new PropertyValueFactory<>("appTitle"));
-        appDescriptionCol.setCellValueFactory(new PropertyValueFactory<>("appDescription"));
-        appLocationCol.setCellValueFactory(new PropertyValueFactory<>("appLocation"));
-        appTypeCol.setCellValueFactory(new PropertyValueFactory<>("appType"));
-        appStartDateTimeCol.setCellValueFactory(new PropertyValueFactory<>("appStartTime"));
-        appEndDateTimeCol.setCellValueFactory(new PropertyValueFactory<>("appEndTime"));
-        appCustomerIdCol.setCellValueFactory(new PropertyValueFactory<>("customerID"));
-        appContactCol.setCellValueFactory(new PropertyValueFactory<>("contactID"));
-        appUserIdCol.setCellValueFactory(new PropertyValueFactory<>("userID"));
+        //userTimeZoneLbl.setText("Your Time Zone: " + String.valueOf(ZoneId.systemDefault()));
 
-        mainScreenAppointmentsTable.setItems(allAppointmentsList);
+        // Appointments tableview
+        appIDCol.setCellValueFactory(new PropertyValueFactory<>("apptId"));
+        appTitleCol.setCellValueFactory(new PropertyValueFactory<>("apptTitle"));
+        appDescriptionCol.setCellValueFactory(new PropertyValueFactory<>("apptDesc"));
+        appCustomerIdCol.setCellValueFactory(new PropertyValueFactory<>("custId"));
+        appLocationCol.setCellValueFactory(new PropertyValueFactory<>("apptLocation"));
+        appContactCol.setCellValueFactory(new PropertyValueFactory<>("contactId"));
+        appTypeCol.setCellValueFactory(new PropertyValueFactory<>("apptType"));
+        appStartDateTimeCol.setCellValueFactory(new PropertyValueFactory<>("startDate"));
+        appEndDateTimeCol.setCellValueFactory(new PropertyValueFactory<>("endDate"));
+        appEndDateTimeCol.setCellValueFactory(new PropertyValueFactory<>("startDtTime"));
+        appStartDateTimeCol.setCellValueFactory(new PropertyValueFactory<>("endDtTime"));
+        appUserIdCol.setCellValueFactory(new PropertyValueFactory<>("userId"));
+
+        //Customer Tableview
+        customerIDCol.setCellValueFactory(new PropertyValueFactory<>("custId"));
+        customerNameCol.setCellValueFactory(new PropertyValueFactory<>("custName"));
+        customerAddressCol.setCellValueFactory(new PropertyValueFactory<>("custAddress"));
+        customerPhoneNumberCol.setCellValueFactory(new PropertyValueFactory<>("custPhoneNumber"));
+        customerStateCol.setCellValueFactory(new PropertyValueFactory<>(""));
+        customerPostalCodeCol.setCellValueFactory(new PropertyValueFactory<>("custPostalCode"));
+
+        JDBC.openConnection();
+        AppointmentDAO appointmentDao = new AppointmentDAOImpl();
+        mainScreenAppointmentsTable.setItems(appointmentDao.getAllAppointments());
+        CustomerDAO customerDao = new CustomerDAOImpl();
+        mainScreenCustomersTable.setItems(customerDao.getAllCustomers());
+
 
 //I understand that normally I would pull this from the local storage but I need to figure how to pull this from the database, store it temp, and display it.
 
