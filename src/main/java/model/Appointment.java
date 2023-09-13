@@ -46,11 +46,11 @@ public class Appointment {
         this.apptId = apptId;
     }
 
-    public int getCustId() {
+    public int getCustomerId() {
         return customerId;
     }
 
-    public void setCustId(int customerId) {
+    public void setCustomerId(int customerId) {
         this.customerId = customerId;
     }
 

@@ -5,52 +5,85 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import model.Appointment;
 
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-
+import java.util.Objects;
+import java.util.stream.Stream;
 
 import static helper.JDBC.connection;
 
 public class AppointmentDAOImpl implements AppointmentDAO {
     ObservableList<Appointment> allAppointments = FXCollections.observableArrayList();
 
-    public boolean apptFound;
+    //public boolean apptFound;
 
 
     @Override
     public ObservableList<Appointment> getAllAppointments() {
-        try {
-            String sql = "SELECT * FROM appointments";
-            PreparedStatement ps = connection.prepareStatement(sql);
-            ResultSet result = ps.executeQuery();
+        ObservableList<Appointment> allAppointments = FXCollections.observableArrayList();
 
-            while (result.next()) {
-                int appointmentId = result.getInt("Appointment_ID");
-                int customerId = result.getInt("Customer_ID");
-                int userId = result.getInt("User_ID");
-                int contactId = result.getInt("Contact_ID");
-                String title = result.getString("Title");
-                String description = result.getString("Description");
-                String location = result.getString("Location");
-                String type = result.getString("Type");
-                LocalDateTime startDateTime = result.getTimestamp("Start").toLocalDateTime();
-                LocalDateTime endDateTime = result.getTimestamp("End").toLocalDateTime();
-                LocalDate startDate = startDateTime.toLocalDate();
-                LocalDate endDate = endDateTime.toLocalDate();
-                LocalTime startTime = startDateTime.toLocalTime();
-                LocalTime endTime = endDateTime.toLocalTime();
-                Appointment appointment = new Appointment(appointmentId, customerId, userId, contactId, title, description,
-                        location, type, startDateTime, endDateTime, startDate, endDate, startTime, endTime);
-                allAppointments.add(appointment);
-            }
-        } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
+        String sql = "SELECT * FROM appointments";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql);
+             ResultSet result = ps.executeQuery()) {
+
+            allAppointments = FXCollections.observableArrayList(
+                    // Use Stream.generate to create a Stream of Appointment objects
+                    Stream.generate(() -> {
+                                try {
+                                    // Check if there are more results in the ResultSet
+                                    if (!result.next()) {
+                                        // If there are no more results, return null to stop further generation
+                                        return null; // End of results, return null to stop generation
+                                    }
+
+                                    // Extract data from the ResultSet for creating an Appointment object
+                                    int apptId = result.getInt("Appointment_ID");
+                                    int customerId = result.getInt("Customer_ID");
+                                    int userId = result.getInt("User_ID");
+                                    int contactId = result.getInt("Contact_ID");
+                                    String apptTitle = result.getString("Title");
+                                    String apptDesc = result.getString("Description");
+                                    String apptLocation = result.getString("Location");
+                                    String apptType = result.getString("Type");
+                                    LocalDateTime startDtTime = result.getTimestamp("Start").toLocalDateTime();
+                                    LocalDateTime endDtTime = result.getTimestamp("End").toLocalDateTime();
+                                    LocalDate startDate = startDtTime.toLocalDate();
+                                    LocalDate endDate = endDtTime.toLocalDate();
+                                    LocalTime startTime = startDtTime.toLocalTime();
+                                    LocalTime endTime = endDtTime.toLocalTime();
+
+                                    // Create an Appointment object using the retrieved data
+                                    return new Appointment(apptId, customerId, userId, contactId, apptTitle, apptDesc,
+                                            apptLocation, apptType, startDtTime, endDtTime, startDate, endDate, startTime, endTime);
+                                } catch (SQLException e) {
+                                    // If a SQLException occurs during this process, rethrow it as a RuntimeException for error handling
+                                    throw new RuntimeException("Error occurred while fetching appointments.", e);
+                                }
+                            })
+                            // Use takeWhile to continue generating Appointment objects until a null is encountered (end of results)
+                            .takeWhile(Objects::nonNull)
+                            // Collect the generated Appointment objects into an immutable list
+                            .toList()
+            );
+
+
+        } catch (SQLException e) {
+            // Handle SQLException properly, log it, and throw a runtime exception if needed
+            System.err.println("SQL Error: " + e.getMessage());
             e.printStackTrace();
+            throw new RuntimeException("Error occurred while fetching appointments.", e);
+        } catch (Exception e) {
+            // Handle other exceptions, log them, and throw a runtime exception if needed
+            System.err.println("Error: " + e.getMessage());
+            e.printStackTrace();
+            throw new RuntimeException("Error occurred while fetching appointments.", e);
         }
+
         return allAppointments;
     }
 
@@ -59,8 +92,8 @@ public class AppointmentDAOImpl implements AppointmentDAO {
         return null;
     }
 
-    @Override
-    public ObservableList<Appointment> getApptsByCustomer(int custId) {
+    @Override//This is where I chanced custId to customerId
+    public ObservableList<Appointment> getApptsByCustomer(int customerId) {
         return null;
     }
 

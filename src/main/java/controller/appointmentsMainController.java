@@ -92,7 +92,7 @@ public class appointmentsMainController {
 
     public void onActionReports(ActionEvent actionEvent) throws IOException {
         stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
-        scene = FXMLLoader.load(getClass().getResource("/view/reports.fxml"));
+        scene = FXMLLoader.load(getClass().getResource("/view/reportsMain.fxml"));
         stage.setScene(new Scene(scene));
         stage.show();
 
@@ -124,7 +124,7 @@ public class appointmentsMainController {
         appIDCol.setCellValueFactory(new PropertyValueFactory<>("apptId"));
         appTitleCol.setCellValueFactory(new PropertyValueFactory<>("apptTitle"));
         appDescriptionCol.setCellValueFactory(new PropertyValueFactory<>("apptDesc"));
-        appCustomerIdCol.setCellValueFactory(new PropertyValueFactory<>("custId"));
+        appCustomerIdCol.setCellValueFactory(new PropertyValueFactory<>("customerId"));
         appLocationCol.setCellValueFactory(new PropertyValueFactory<>("apptLocation"));
         appContactCol.setCellValueFactory(new PropertyValueFactory<>("contactId"));
         appTypeCol.setCellValueFactory(new PropertyValueFactory<>("apptType"));
@@ -135,11 +135,11 @@ public class appointmentsMainController {
         appUserIdCol.setCellValueFactory(new PropertyValueFactory<>("userId"));
 
         //Customer Tableview
-        customerIDCol.setCellValueFactory(new PropertyValueFactory<>("custId"));
+        customerIDCol.setCellValueFactory(new PropertyValueFactory<>("customerId"));
         customerNameCol.setCellValueFactory(new PropertyValueFactory<>("custName"));
         customerAddressCol.setCellValueFactory(new PropertyValueFactory<>("custAddress"));
         customerPhoneNumberCol.setCellValueFactory(new PropertyValueFactory<>("custPhoneNumber"));
-        customerStateCol.setCellValueFactory(new PropertyValueFactory<>(""));
+        customerStateCol.setCellValueFactory(new PropertyValueFactory<>("custDivisionName"));
         customerPostalCodeCol.setCellValueFactory(new PropertyValueFactory<>("custPostalCode"));
 
         JDBC.openConnection();

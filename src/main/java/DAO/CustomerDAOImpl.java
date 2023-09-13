@@ -14,19 +14,26 @@ public class CustomerDAOImpl implements CustomerDAO{
     @Override
     public ObservableList<Customer> getAllCustomers() {
         try {
-            String sql = "SELECT * FROM customers";
+            String sql = "select * from client_schedule.customers, client_schedule.first_level_divisions, client_schedule.countries \n" +
+                    "where customers.Division_ID = first_level_divisions.Division_ID\n" +
+                    "and first_level_divisions.Country_ID = countries.Country_ID";
             PreparedStatement ps = connection.prepareStatement(sql);
             ResultSet result = ps.executeQuery();
-
             while (result.next()) {
                 int customerId = result.getInt("Customer_ID");
                 String custName = result.getString("Customer_Name");
+                int countryId = result.getInt("Country_ID");
                 String custAddress = result.getString("Address");
-                String custPhoneNumber = result.getString("Phone");
                 String custPostalCode = result.getString("Postal_Code");
+                String custPhoneNumber = result.getString("Phone");
                 int divisionId = result.getInt("Division_ID");
-                Customer customer = new Customer(customerId, custName, custAddress, custPostalCode, custPhoneNumber, divisionId);
+                String custcountryName = result.getString("Country");
+                String custDivisionName = result.getString("Division");
+
+                Customer customer = new Customer(customerId, custName, countryId, custAddress, custPostalCode, custPhoneNumber,
+                        divisionId, custcountryName, custDivisionName);
                 allCustomers.add(customer);
+
             }
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());

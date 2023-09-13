@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="396.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.reportsDivisionTotalController">
+   <children>
+      <TableView fx:id="reportsTotalCustOfDivisionTableview" layoutX="98.0" layoutY="101.0" prefHeight="232.0" prefWidth="404.0">
+         <columns>
+            <TableColumn fx:id="reportsDivisionInformationDivNameCol" prefWidth="200.0" text="Division Name" />
+            <TableColumn fx:id="reportsDivisionInformationTotalCustomersCol" prefWidth="204.0" text="Total Customers" />
+            <TableColumn prefWidth="196.0" text="Total Appointments" />
+         </columns>
+      </TableView>
+      <Label layoutX="180.0" layoutY="43.0" prefHeight="27.0" prefWidth="240.0" text="Total Customers by Division">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Label>
+      <Button layoutX="25.0" layoutY="24.0" mnemonicParsing="false" onAction="#onActionBacktoReportsMain" text="&lt;-- Back">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>

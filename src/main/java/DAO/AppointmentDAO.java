@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-public interface AppointmentDAO {
+public interface  AppointmentDAO {
 
     public ObservableList<Appointment> getAllAppointments();
 

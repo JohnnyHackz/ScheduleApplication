@@ -1,27 +1,40 @@
 package model;
 
 public class Contact {
-    public int id;
-    public String contactsName;
-    public String contactsEmail;
+    private int contactId;
+    private String contactsName;
+    private String contactsEmail;
 
-    public int getId() {
-        return id;
+    public void setContactId(int contactId) {
+        this.contactId = contactId;
     }
 
-    public String getContactsName() {
-        return contactsName;
+    public void setContactsName(String contactsName) {
+        this.contactsName = contactsName;
     }
 
-    public String getContactsEmail() {
-        return contactsEmail;
+    public void setContactsEmail(String contactsEmail) {
+        this.contactsEmail = contactsEmail;
     }
 
-    public Contact(int id, String contactsName, String contactsEmail){
-        this.id = id;
+    public int getContactId() {return contactId;
+    }
+
+    public String getContactsName() {return contactsName;
+    }
+
+    public String getContactsEmail() {return contactsEmail;
+    }
+
+    public Contact(int contactId, String contactsName, String contactsEmail){
+        this.contactId = contactId;
         this.contactsName = contactsName;
         this.contactsEmail = contactsEmail;
     }
 
-
+    @Override
+    public String toString(){
+        return ("[" + Integer.toString(contactId) + "]" + contactsName);
+    }
 }
+
