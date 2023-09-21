@@ -20,7 +20,7 @@ public interface  AppointmentDAO {
     public int updateAppt(int apptId, int customerId, int userId, int contactId, String apptTitle, String apptDesc,
                           String apptLocation, String apptType, LocalDateTime startDtTime, LocalDateTime endDtTime);
 
-    public int deleteAppt(int apptId, int customerId, String apptType);
+    public int deleteAppt(int apptId, int customerId);
 
     public int addAppt(int customerId, int userId, int contactId, String apptTitle, String apptDesc,
                        String apptLocation, String apptType, LocalDateTime startDtTime, LocalDateTime endDtTime);

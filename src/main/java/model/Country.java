@@ -1,27 +1,31 @@
 package model;
 
 public class Country {
-    private int countryID;
-    private String countryName;
+    private int countryId;
+    private String nameOfCountry;
 
-    public int getCountryID() {
-        return countryID;
+    public int getCountryId() {
+        return countryId;
     }
 
-    public void setCountryID(int countryID) {
-        this.countryID = countryID;
+    public void setCountryId(int countryId) {
+        this.countryId = countryId;
     }
-
-    public String getCountryName() {
-        return countryName;
+    public String getNameOfCountry() {
+        return nameOfCountry;
     }
 
     public void setCountryName(String countryName) {
-        this.countryName = countryName;
+        this.nameOfCountry = nameOfCountry;
     }
 
-    public Country(int countryID, String countryName){
-        this.countryID = countryID;
-        this.countryName = countryName;
+    public Country(int countryId, String nameOfCountry){
+        this.countryId = countryId;
+        this.nameOfCountry = nameOfCountry;
+    }
+
+    @Override
+    public String toString() {
+        return (nameOfCountry);
     }
 }

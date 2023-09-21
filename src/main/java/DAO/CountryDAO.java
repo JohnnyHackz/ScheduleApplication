@@ -9,7 +9,7 @@ public interface CountryDAO {
 
     public Country getCountryId(int countryId);
 
-    public Country getCountryByName(String countryName);
+    public Country getCountryByName(String nameOfCountry);
 
     public ObservableList<Country> getCountryById();
 

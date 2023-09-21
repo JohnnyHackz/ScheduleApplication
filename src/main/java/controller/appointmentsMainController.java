@@ -14,9 +14,11 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import model.Customer;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Optional;
 
 public class appointmentsMainController {
 
@@ -80,15 +82,58 @@ public class appointmentsMainController {
         stage.show();
     }
 
-    public void onActionCustomerUpdate(ActionEvent event) throws IOException {
-        stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-        scene = FXMLLoader.load(getClass().getResource("/view/modifyCustomer.fxml"));
-        stage.setScene(new Scene(scene));
-        stage.show();
+    public void onActionCustomerUpdate(ActionEvent actionEvent) throws IOException {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("/view/modifyCustomer.fxml"));
+            Parent scene = loader.load();
+
+            //this is where I need to modify my code. I need to write in the logic for the save customer method so I can then
+            //call it here (UpdateCustomer is their version of SAVE customer.)
+            modifyCustomerController updateCust = loader.getController();
+
+            Customer pickedCustomer = (Customer) mainScreenCustomersTable.getSelectionModel().getSelectedItem();
+
+            updateCust.updateCustomer(pickedCustomer);
+
+            stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(scene));
+            stage.show();
+        }catch (RuntimeException e){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("No Customer Selected");
+            alert.setContentText("Please select a customer to update!");
+            alert.showAndWait();
+        }
+    }
+    public void onActionCustomersDelete(ActionEvent event) {
+        Customer selectedCustomer = (Customer) mainScreenCustomersTable.getSelectionModel().getSelectedItem();
+        if (selectedCustomer == null){
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Warning");
+            alert.setContentText("Error: Please select a customer.");
+            alert.showAndWait();
+            return;
+        }
+        JDBC.openConnection();
+        CustomerDAO customerDAO = new CustomerDAOImpl();
+        Customer clickedCustomer = (Customer) mainScreenCustomersTable.getSelectionModel().getSelectedItem();
+        int customerId = clickedCustomer.getCustomerId();
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setContentText("The selected \"Customer\" and their corresponding \"Appointment(s)\" will be deleted. Do you wish to continue?");
+        alert.showAndWait();
+        Optional<ButtonType> rs = alert.showAndWait();
+
+        if((rs.isPresent() && rs.get()== ButtonType.OK)){
+            System.out.println(customerDAO.customerDelete(customerId));
+            JDBC.openConnection();
+            mainScreenCustomersTable.setItems(customerDAO.getAllCustomers());
+        }
+
+
     }
 
-    public void onActionCustomersDelete(ActionEvent event) {
-    }
 
     public void onActionReports(ActionEvent actionEvent) throws IOException {
         stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
@@ -129,9 +174,10 @@ public class appointmentsMainController {
         appContactCol.setCellValueFactory(new PropertyValueFactory<>("contactId"));
         appTypeCol.setCellValueFactory(new PropertyValueFactory<>("apptType"));
         appStartDateTimeCol.setCellValueFactory(new PropertyValueFactory<>("startDate"));
+        appStartDateTimeCol.setCellValueFactory(new PropertyValueFactory<>("startDtTime"));
         appEndDateTimeCol.setCellValueFactory(new PropertyValueFactory<>("endDate"));
-        appEndDateTimeCol.setCellValueFactory(new PropertyValueFactory<>("startDtTime"));
-        appStartDateTimeCol.setCellValueFactory(new PropertyValueFactory<>("endDtTime"));
+        appEndDateTimeCol.setCellValueFactory(new PropertyValueFactory<>("endDtTime"));
+
         appUserIdCol.setCellValueFactory(new PropertyValueFactory<>("userId"));
 
         //Customer Tableview

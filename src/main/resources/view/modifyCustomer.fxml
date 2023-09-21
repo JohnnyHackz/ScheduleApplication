@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -14,7 +14,10 @@
                 <Font name="Arial" size="24.0" />
             </font>
         </Label>
-        <TextField fx:id="modCustomerID" editable="false" layoutX="203.0" layoutY="130.0" prefHeight="26.0" prefWidth="189.0" />
+        <TextField fx:id="modCustomerID" editable="false" layoutX="203.0" layoutY="130.0" prefHeight="26.0" prefWidth="189.0" promptText="Auto-Generated">
+         <font>
+            <Font name="System Italic" size="12.0" />
+         </font></TextField>
         <TextField fx:id="modCustomerName" layoutX="203.0" layoutY="165.0" prefHeight="26.0" prefWidth="189.0" />
         <TextField fx:id="modCustomerAddress" layoutX="203.0" layoutY="200.0" prefHeight="26.0" prefWidth="189.0" />
         <TextField fx:id="modCustomerPostalCode" layoutX="203.0" layoutY="340.0" prefHeight="26.0" prefWidth="189.0" />
@@ -25,10 +28,10 @@
         <Label layoutX="78.0" layoutY="275.0" text="Country" />
         <Label layoutX="78.0" layoutY="310.0" text="State/Providence" />
         <Label layoutX="78.0" layoutY="345.0" text="Postal Code" />
-        <ChoiceBox fx:id="modCustomerCountry" layoutX="203.0" layoutY="270.0" prefHeight="26.0" prefWidth="189.0" />
-        <ChoiceBox fx:id="modCustomerStateProvince" layoutX="203.0" layoutY="305.0" prefHeight="26.0" prefWidth="189.0" />
         <TextField fx:id="modCustomerPhoneNumber" layoutX="203.0" layoutY="235.0" prefHeight="26.0" prefWidth="189.0" />
         <Button fx:id="modCustomerSave" layoutX="240.0" layoutY="403.0" mnemonicParsing="false" onAction="#onActionModCustomerSaveButton" text="Save" />
         <Button fx:id="modCustomerCancel" layoutX="336.0" layoutY="403.0" mnemonicParsing="false" onAction="#onActionModCustomerCancelButton" text="Cancel" />
+      <ComboBox fx:id="modCustomerCountry" layoutX="203.0" layoutY="271.0" onAction="#onActionPickCountry" prefHeight="25.0" prefWidth="189.0" />
+      <ComboBox fx:id="modCustomerStateProvince" layoutX="203.0" layoutY="305.0" prefHeight="25.0" prefWidth="189.0" />
     </children>
 </AnchorPane>

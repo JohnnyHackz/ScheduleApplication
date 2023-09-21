@@ -59,8 +59,9 @@ public class loginController implements Initializable {
         try {
             Locale locale = Locale.getDefault();
             Locale.setDefault(locale);
-
             ZoneId zoneId = ZoneId.systemDefault();
+            loginPageLocation.setText(String.valueOf(ZoneId.systemDefault()));
+
 
             rb = ResourceBundle.getBundle("/language/loginPropPage", Locale.getDefault());
             usernameField.setText(rb.getString("Username"));

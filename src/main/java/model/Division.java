@@ -6,6 +6,10 @@ public class Division {
     private int countryId;
 
 
+
+    private String countryName;
+
+
     public int getDivisionId() {
         return divisionId;
     }
@@ -14,25 +18,39 @@ public class Division {
         this.divisionId = divisionId;
     }
 
-    public String getDivision() {
+    public String getDivisionName() {
         return divisionName;
     }
 
-    public void setDivision(String division) {
-        this.divisionName = division;
+    public void setDivisionName(String divisionName) {
+        this.divisionName = divisionName;
     }
 
-    public int getCountryID() {
+    public int getCountryId() {
         return countryId;
     }
 
-    public void setCountryID(int countryID) {
-        this.countryId = countryID;
+    public void setCountryId(int countryId) {
+        this.countryId = countryId;
     }
 
-    public Division(int divisionId, String divisionName, int countryID){
+    public String getCountryName() {
+        return countryName;
+    }
+
+    public void setCountryName(String countryName) {
+        this.countryName = countryName;
+    }
+
+    public Division(int divisionId, String divisionName, int countryId, String countryName){
         this.divisionId = divisionId;
         this.divisionName = divisionName;
-        this.countryId = countryID;
+        this.countryId = countryId;
+        this.countryName = countryName;
+    }
+
+    @Override
+    public String toString(){
+        return divisionName;
     }
 }

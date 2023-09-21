@@ -6,16 +6,16 @@ import model.Customer;
 public interface CustomerDAO {
     public ObservableList<Customer> getAllCustomers();
 
-    public Customer getCustomerID(int customerId);
+    public Customer getCustomerId(int customerId);
 
-    public ObservableList<Customer> getCustomerByDivisionID();
+    public ObservableList<Customer> getCustomerByDivisionID(int divisionId);
 
-    public int addCustomer(int customerId, String custName, String custAddress, String custPostalCode, String custPhoneNumber,
-                           int divisionId);
+    public int addCustomer(String custName, String custAddress, String custPhoneNumber, int divisionId,
+                           String custPostalCode);
 
-    public int customerUpdate(int customerId, String custName, String custPostalCode, String custPhoneNumber,
-                              int divisionId);
-    public int customerDelete(int customerId, String custName, int divisionId);
+    public int customerUpdate(String custName, String custAddress, String custPhoneNumber, int divisionId,
+                              String custPostalCode, int customerId);
+    public int customerDelete(int customerId);
 
 
 }
