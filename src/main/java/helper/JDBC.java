@@ -18,18 +18,19 @@ public class JDBC {
     private static String password = "Passw0rd!"; // Password
     public static Connection connection;  // Connection Interface
 
-    public static Connection openConnection()
-    {
+    public static Connection openConnection() {
+        Connection conn = null;
         try {
             Class.forName(driver); // Locate Driver
             connection = DriverManager.getConnection(jdbcUrl, userName, password); // Reference Connection object
             System.out.println("Connection successful! Yay Baby!!");
+            return connection;
         }
         catch(Exception e)
         {
             System.out.println("Error:" + e.getMessage());
         }
-        return null;
+        return conn;
     }
 
     public static Connection getConnection(){

@@ -14,10 +14,12 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import model.Appointment;
 import model.Customer;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.Optional;
 
 public class appointmentsMainController {
@@ -64,15 +66,64 @@ public class appointmentsMainController {
         System.out.println("I am clicked");
     }
 
-    public void onActionAppointmentUpdate(ActionEvent event) throws IOException {
-        stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-        scene = FXMLLoader.load(getClass().getResource("/view/modifyAppointment.fxml"));
-        stage.setScene(new Scene(scene));
-        stage.show();
+    public void onActionAppointmentUpdate(ActionEvent actionEvent) throws IOException {
+        Appointment pickedAppointment = (Appointment) mainScreenAppointmentsTable.getSelectionModel().getSelectedItem();
+
+        if (pickedAppointment == null) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("No Appointment Selected");
+            alert.setContentText("Please select an Appointment to update!");
+            alert.showAndWait();
+            return;  // Exit the method if no appointment is selected
+        }
+
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("/view/modifyAppointment.fxml"));
+            Parent scene = loader.load();
+
+            modifyAppointmentController updateAppointments = loader.getController();
+            updateAppointments.updateAppointment(pickedAppointment);
+
+            stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(scene));
+            stage.show();
+        } catch (Exception e) {
+            // Catch general exceptions for better debugging
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setContentText("An unexpected error occurred!");
+            alert.showAndWait();
+        }
     }
 
     public void onActionAppointmentDelete(ActionEvent actionEvent) {
+        // Get the selected appointment
+        Appointment selectedAppointment = (Appointment) mainScreenAppointmentsTable.getSelectionModel().getSelectedItem();
 
+        if (selectedAppointment == null){
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Warning");
+            alert.setContentText("Error: Please select an appointment.");
+            alert.showAndWait();
+            return;
+        }
+
+        JDBC.openConnection();
+        AppointmentDAO appointmentDAO = new AppointmentDAOImpl();
+        int appointmentId = selectedAppointment.getApptId();
+        int customerId = selectedAppointment.getCustomerId();
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setContentText("The selected \"Appointment\" will be deleted. Do you wish to continue?");
+        Optional<ButtonType> rs = alert.showAndWait();
+
+        if((rs.isPresent() && rs.get() == ButtonType.OK)){
+            System.out.println(appointmentDAO.deleteAppt(appointmentId, customerId));
+            JDBC.openConnection();
+            mainScreenAppointmentsTable.setItems(appointmentDAO.getAllAppointments()); // Refresh the appointments table
+        }
     }
 
     public void onActionCustomerAdd(ActionEvent actionEvent) throws IOException {
@@ -144,17 +195,39 @@ public class appointmentsMainController {
         System.out.println("I am clicked");
     }
 
-    public void onActionLogout(ActionEvent actionEvent) {
+    public void onActionLogout(ActionEvent actionEvent) throws IOException {
+        stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
+        scene = FXMLLoader.load(getClass().getResource("/view/login.fxml"));
+        stage.setScene(new Scene(scene));
+        stage.show();
 
     }
 
-    public void onActionCurrentWeekRadioButton(ActionEvent actionEvent) {
-    }
 
     public void onActionCurrentMonthRadioButton(ActionEvent actionEvent) {
+        LocalDate today = LocalDate.now();
+
+        // Opens database connection
+        JDBC.openConnection();
+        AppointmentDAO appointmentDao = new AppointmentDAOImpl();
+
+        // Fetches the appointments for the current month using the combined method.
+        mainScreenAppointmentsTable.setItems(appointmentDao.upcomingAppts(today, "month"));
+
+        // closes the database connection
+        //JDBC.closeConnection();
     }
 
     public void onActionAllAppointmentsRadioButton(ActionEvent actionEvent) {
+        // Opens database connection
+        JDBC.openConnection();
+        AppointmentDAO appointmentDAO = new AppointmentDAOImpl();
+
+        // Fetches all appointments
+        mainScreenAppointmentsTable.setItems(appointmentDAO.getAllAppointments());
+
+        // closes the database connection
+        //JDBC.closeConnection();
     }
 
 
@@ -194,9 +267,19 @@ public class appointmentsMainController {
         CustomerDAO customerDao = new CustomerDAOImpl();
         mainScreenCustomersTable.setItems(customerDao.getAllCustomers());
 
+    }
 
-//I understand that normally I would pull this from the local storage but I need to figure how to pull this from the database, store it temp, and display it.
+    public void onActionCurrentWeekRadioButton(ActionEvent actionEvent) {
+        LocalDate today = LocalDate.now();
 
-        //mainScreenPartsTable.setItems(Inventory.getAllParts());
+        // Opens database connection
+        JDBC.openConnection();
+        AppointmentDAO appointmentDao = new AppointmentDAOImpl();
+
+        // Fetches the appointments for the current month using the combined method.
+        mainScreenAppointmentsTable.setItems(appointmentDao.upcomingAppts(today, "week"));
+
+        // closes the database connection after the operation
+        //JDBC.closeConnection();
     }
 }

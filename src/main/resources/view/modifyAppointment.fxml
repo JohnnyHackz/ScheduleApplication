@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.ColorAdjust?>
@@ -9,6 +9,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
+<?import javafx.scene.control.Label?>
 <AnchorPane fx:id="modAppointmentStage" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="534.0" prefWidth="576.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.modifyAppointmentController">
     <children>
         <Text layoutX="206.0" layoutY="48.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Modify Appointment" wrappingWidth="177.5">
@@ -41,21 +42,16 @@
                 <Font name="Arial" size="13.0" />
             </font>
         </Text>
-        <TextField fx:id="modAppointmentID" editable="false" layoutX="229.0" layoutY="81.0" prefHeight="26.0" prefWidth="160.0">
+        <Label fx:id="modAppointmentID" layoutX="229.0" layoutY="81.0" prefHeight="26.0" prefWidth="160.0">
             <effect>
                 <ColorAdjust brightness="-0.12" />
-            </effect></TextField>
+            </effect></Label>
         <TextField fx:id="modAppointmentTitle" layoutX="229.0" layoutY="111.0" />
         <TextField fx:id="modAppointmentType" layoutX="229.0" layoutY="142.0" prefHeight="26.0" prefWidth="160.0" />
         <TextField fx:id="modAppointmentDescription" layoutX="229.0" layoutY="173.0" prefHeight="26.0" prefWidth="160.0" />
         <TextField fx:id="modAppointmentLocation" layoutX="229.0" layoutY="204.0" prefHeight="26.0" prefWidth="160.0" />
       <DatePicker fx:id="modAppointmentStartDate" layoutX="229.0" layoutY="235.0" prefHeight="26.0" prefWidth="160.0" />
       <DatePicker fx:id="modAppointmentEndDate" layoutX="229.0" layoutY="266.0" prefHeight="26.0" prefWidth="160.0" />
-      <ChoiceBox fx:id="modAppointmentStartTime" layoutX="229.0" layoutY="297.0" prefHeight="26.0" prefWidth="160.0" />
-      <ChoiceBox fx:id="modAppointmentEndTime" layoutX="229.0" layoutY="328.0" prefHeight="26.0" prefWidth="160.0" />
-      <ChoiceBox fx:id="modAppointmentCustomerID" layoutX="229.0" layoutY="359.0" prefHeight="26.0" prefWidth="160.0" />
-      <ChoiceBox fx:id="modAppointmentUserID" layoutX="229.0" layoutY="390.0" prefHeight="26.0" prefWidth="160.0" />
-      <ChoiceBox fx:id="modAppointmentContact" layoutX="229.0" layoutY="421.0" prefHeight="26.0" prefWidth="160.0" />
       <Text layoutX="141.0" layoutY="253.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Start Date" wrappingWidth="87.4736328125">
          <font>
             <Font name="Arial" size="13.0" />
@@ -93,5 +89,10 @@
       </Text>
       <Button layoutX="229.0" layoutY="480.0" mnemonicParsing="false" onAction="#onActionModSaveButton" text="Save" />
       <Button layoutX="334.0" layoutY="481.0" mnemonicParsing="false" onAction="#onActionModCancelButton" text="Cancel" />
+      <ComboBox fx:id="modAppointmentStartTime" layoutX="229.0" layoutY="298.0" prefWidth="150.0" />
+      <ComboBox fx:id="modAppointmentEndTime" layoutX="229.0" layoutY="329.0" prefWidth="150.0" />
+      <ComboBox fx:id="modAppointmentCustomerID" layoutX="229.0" layoutY="361.0" prefWidth="150.0" />
+      <ComboBox fx:id="modAppointmentUserID" layoutX="229.0" layoutY="391.0" prefWidth="150.0" />
+      <ComboBox fx:id="modAppointmentContact" layoutX="229.0" layoutY="423.0" prefWidth="150.0" />
     </children>
 </AnchorPane>

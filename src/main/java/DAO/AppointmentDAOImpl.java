@@ -3,15 +3,14 @@ package DAO;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import model.Appointment;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.*;
 import java.util.Objects;
 import java.util.stream.Stream;
 
@@ -20,7 +19,8 @@ import static helper.JDBC.connection;
 public class AppointmentDAOImpl implements AppointmentDAO {
     ObservableList<Appointment> allAppointments = FXCollections.observableArrayList();
 
-    //public boolean apptFound;
+    ZoneId localZone = ZoneId.systemDefault();
+    ZoneId businessZone = ZoneId.of("America/New_York");
 
 
     @Override
@@ -144,6 +144,7 @@ public class AppointmentDAOImpl implements AppointmentDAO {
         return null;
     }
 
+
     @Override
     public int updateAppt(int apptId, int customerId, int userId, int contactId, String apptTitle, String apptDesc,
                           String apptLocation, String apptType, LocalDateTime startDtTime, LocalDateTime endDtTime) {
@@ -188,7 +189,7 @@ public class AppointmentDAOImpl implements AppointmentDAO {
 
     @Override
     public int deleteAppt(int apptId, int customerId) {
-        String sql = "DELETE FROM appointments WHERE Appointment_ID = ? AND Customer_ID = ? AND Type = ?";
+        String sql = "DELETE FROM appointments WHERE Appointment_ID = ? AND Customer_ID = ?";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, apptId);
@@ -215,6 +216,7 @@ public class AppointmentDAOImpl implements AppointmentDAO {
         // Return 0 if no rows were deleted (indicating a failure to delete the appointment)
         return 0;
     }
+
 
 
     @Override
@@ -268,22 +270,49 @@ public class AppointmentDAOImpl implements AppointmentDAO {
     }
 
     @Override
-    public ObservableList<Appointment> upcomingApptsWeek(LocalDate loginLD) {
-        return null;
+    public FilteredList<Appointment> upcomingAppts(LocalDate dateAtLogin, String duration) {
+        ObservableList<Appointment> allAppts = FXCollections.observableArrayList();
+        allAppts = getAllAppointments();
+        FilteredList<Appointment> filteredAppts = new FilteredList<>(allAppts);
+
+        filteredAppts.setPredicate(appointment -> {
+            LocalDate apptDate = appointment.getStartDate();
+
+            if ("week".equalsIgnoreCase(duration)) {
+                return ((apptDate.isEqual(dateAtLogin) || apptDate.isAfter(dateAtLogin)) &&
+                        apptDate.isBefore(dateAtLogin.plusDays(7)));
+            } else if ("month".equalsIgnoreCase(duration)) {
+                return (apptDate.isEqual(dateAtLogin) || apptDate.isAfter(dateAtLogin)) &&
+                        apptDate.getMonth().equals(dateAtLogin.getMonth());
+            } else {
+                return false;
+            }
+        });
+        return filteredAppts;
     }
 
-    @Override
-    public ObservableList<Appointment> upcomingApptsMonth(LocalDate loginLD) {
-        return null;
-    }
 
     @Override
     public boolean checkApptStartTime(LocalDateTime apptStartTime) {
+        ZonedDateTime zonedApptStartTime = apptStartTime.atZone(localZone).withZoneSameInstant(businessZone);
+        int hourInBusinessZone = zonedApptStartTime.getHour();
+
+        // Now check if the time in EST is during business hours
+        if (hourInBusinessZone >= 8 && hourInBusinessZone < 17) {
+            return true;
+        }
         return false;
     }
 
     @Override
     public boolean checkApptEndTime(LocalDateTime apptEndTime) {
+        ZonedDateTime zonedApptEndTime = apptEndTime.atZone(localZone).withZoneSameInstant(businessZone);
+        int hourInBusinessZone = zonedApptEndTime.getHour();
+
+        // Now check if the time in EST is during business hours
+        if (hourInBusinessZone >= 8 && hourInBusinessZone <= 17) {
+            return true;
+        }
         return false;
     }
 

@@ -4,51 +4,51 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import model.User;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import static helper.JDBC.connection;
+
 public class UserDAOImpl implements UserDAO {
-    private final Connection connection;
-    private final ObservableList<User> allUsers;
 
-    public UserDAOImpl(Connection connection) {
-        this.connection = connection;
-        this.allUsers = FXCollections.observableArrayList();
-        // Load all users from the database when the DAO is created
-        loadAllUsers();
-    }
-
-    private void loadAllUsers() {
-        try {
-            String query = "SELECT * FROM users";
-            PreparedStatement statement = connection.prepareStatement(query);
-            ResultSet result = statement.executeQuery();
-
-            while (result.next()) {
-                int userId = result.getInt("User_ID");
-                String userName = result.getString("User_Name");
-                String password = result.getString("Password");
-                User user = new User(userId, userName, password);
-                allUsers.add(user);
+    ObservableList<User> everyUser = FXCollections.observableArrayList();
+    public ObservableList<User> getAllUsers() {
+        try{
+            String sql = "Select * From users";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                int userId = rs.getInt("User_ID");
+                String userName = rs.getString("User_Name");
+                String userPassword = rs.getString("Password");
+                User user = new User(userId, userName, userPassword);
+                everyUser.add(user);
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Error loading users from the database.", e);
+            throw new RuntimeException(e);
         }
-    }
-
-    public ObservableList<User> getAllUsers() {
-        return FXCollections.unmodifiableObservableList(allUsers);
+        return everyUser;
     }
 
     public User getUser(int userId) {
-        for (User user : allUsers) {
-            if (user.getUserID() == userId) {
-                return user;
-            }
+        try{
+            String sql = "Select * From users Where User_ID=?";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            ps.setInt(1, userId);
+
+            User user = null;
+            if(rs.next()){
+                userId = rs.getInt("User_ID");
+                String userName = rs.getString("User_Name");
+                String userPassword = rs.getString("Password");
+                user = new User(userId, userName, userPassword);
+            }return user;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
-        return null;
     }
 
     public int updateUserPassword(String userName, String newPassword, String currentPassword) {

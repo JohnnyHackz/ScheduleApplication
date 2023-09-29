@@ -103,5 +103,9 @@ public class Customer {
 
     }
 
+    public String toString(){
+        return Integer.toString(customerId);
+    }
+
 
 }

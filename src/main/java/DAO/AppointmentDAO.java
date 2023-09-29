@@ -1,6 +1,7 @@
 package DAO;
 
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import model.Appointment;
 
 import java.time.LocalDate;
@@ -29,9 +30,11 @@ public interface  AppointmentDAO {
 
     public void upcomingApptAlert(LocalDateTime loginLDT);
 
-    public ObservableList<Appointment> upcomingApptsWeek(LocalDate loginLD);
+    // public ObservableList<Appointment> upcomingApptsWeek(LocalDate loginLD);
 
-    public ObservableList<Appointment> upcomingApptsMonth(LocalDate loginLD);
+    //public ObservableList<Appointment> upcomingApptsMonth(LocalDate loginLD);
+
+    public FilteredList<Appointment> upcomingAppts(LocalDate dateAtLogin, String duration);
 
     public boolean checkApptStartTime(LocalDateTime apptStartTime);
 

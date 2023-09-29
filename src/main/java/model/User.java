@@ -1,16 +1,16 @@
 package model;
 
 public class User {
-    private int userID;
+    private int userId;
     private String userName;
     private String userPassword;
 
-    public int getUserID() {
-        return userID;
+    public int getUserId() {
+        return userId;
     }
 
-    public void setUserID(int userID) {
-        this.userID = userID;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public String getUserName() {
@@ -29,8 +29,8 @@ public class User {
         this.userPassword = userPassword;
     }
 
-    public User(int userID, String userName, String userPassword){
-        this.userID = userID;
+    public User(int userId, String userName, String userPassword){
+        this.userId = userId;
         this.userName = userName;
         this.userPassword = userPassword;
     }

@@ -60,6 +60,7 @@ public class reportsContactController {
 
 
     public void onActionReportsContactInformationComboBox(ActionEvent actionEvent) {
+        fillTable(actionEvent);
     }
 
 
@@ -80,18 +81,6 @@ public class reportsContactController {
         stage.show();
 
         System.out.println("I am clicked");
-    }
-
-    public void onPull(ActionEvent actionEvent){
-        StringBuilder sb = new StringBuilder("");
-        Contact contact = reportsContactInformationContactsComboBox.getSelectionModel().getSelectedItem();
-
-        if(contact == null){
-            sb.append("ComboxBox: null");
-        }
-        else{
-            sb.append(contact.getContactsName());
-        }
     }
 
     public void fillTable(ActionEvent actionEvent){

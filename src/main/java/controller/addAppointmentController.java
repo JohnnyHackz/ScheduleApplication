@@ -27,8 +27,6 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.ResourceBundle;
 
-import static helper.JDBC.connection;
-
 public class addAppointmentController implements Initializable {
 
     @FXML
@@ -103,78 +101,85 @@ public class addAppointmentController implements Initializable {
 
     @FXML
     void onActionAddAppointmentSaveButton(ActionEvent event) throws IOException {
-            try {
-                boolean formatError = false;
-                String title = addAppointmentTitle.getText();
-                String description = addAppointmentDescription.getText();
-                String location = addAppointmentLocation.getText();
-                String type = addAppointmentType.getText();
-                Contact contact = addAppointmentContact.getValue();
-                Customer customer = addAppointmentCustomerID.getValue();
-                User user = addAppointmentUserID.getValue();
-                LocalDate startDate = addAppointmentStartDate.getValue();
-                LocalDate endDate = addAppointmentEndDate.getValue();
-                LocalTime startTime = addAppointmentStartTime.getValue();
-                LocalTime endTime = addAppointmentEndTime.getValue();
-                LocalDateTime startDateTime = LocalDateTime.of(startDate, startTime);
-                LocalDateTime endDateTime = LocalDateTime.of(endDate, endTime);
+        try {
+            String title = addAppointmentTitle.getText();
+            String description = addAppointmentDescription.getText();
+            String location = addAppointmentLocation.getText();
+            String type = addAppointmentType.getText();
+            Contact contact = addAppointmentContact.getValue();
+            Customer customer = addAppointmentCustomerID.getValue();
+            User user = addAppointmentUserID.getValue();
+            LocalDateTime startDateTime = LocalDateTime.of(addAppointmentStartDate.getValue(), addAppointmentStartTime.getValue());
+            LocalDateTime endDateTime = LocalDateTime.of(addAppointmentEndDate.getValue(), addAppointmentEndTime.getValue());
 
-                if (title.isBlank() || description.isBlank() || location.isBlank() || type.isBlank()) {
-                    formatError = true;
-                    // You should implement how you want to display the error message here.
-                    // For example, using a dialog box, label, or some other UI component.
-                    System.err.println("Error: Please fill in all fields.");
-                }
-
-                if (!formatError) {
-                    AppointmentDAO apptDao = new AppointmentDAOImpl();
-
-                    if (apptDao.checkApptStartTime(startDateTime) && apptDao.checkApptEndTime(endDateTime)) {
-                        if (startDateTime.toLocalTime().isBefore(endDateTime.toLocalTime())) {
-                            if (!apptDao.checkNewApptForOverlap(customer.getCustomerId(), startDate, endDate, startTime, endTime)) {
-                                int rowsAffected = apptDao.addAppt(
-                                        customer.getCustomerId(),
-                                        user.getUserID(),
-                                        contact.getContactId(),
-                                        title,
-                                        description,
-                                        location,
-                                        type,
-                                        startDateTime,
-                                        endDateTime
-                                );
-
-                                if (rowsAffected > 0) {
-                                    // Appointment added successfully, navigate back to the main appointments view
-                                    loadMainAppointmentsView();
-                                } else {
-                                    // Handle the case where the appointment was not added
-                                    // You should implement how you want to display this error message.
-                                    System.err.println("Error: Failed to add the appointment.");
-                                }
-                            } else {
-                                // You should implement how you want to display this error message.
-                                System.err.println("Error: Appointment overlaps with an existing appointment.");
-                            }
-                        } else {
-                            // You should implement how you want to display this error message.
-                            System.err.println("Error: End time must be after start time.");
-                        }
-                    } else {
-                        // You should implement how you want to display this error message.
-                        System.err.println("Error: Invalid start or end time.");
-                    }
-                }
-            } catch (Exception e) {
-                System.err.println("Error: " + e.getMessage());
-                e.printStackTrace();
+            if (!isValidInput(title, description, location, type)) {
+                showError("Error: Please fill in all fields.");
+                return;
             }
+
+            AppointmentDAO apptDao = new AppointmentDAOImpl();
+
+            if (!isValidTimes(apptDao, startDateTime, endDateTime)) return;
+
+            if (startDateTime.toLocalTime().isAfter(endDateTime.toLocalTime())) {
+                showError("Error: End time must be after start time.");
+                return;
+            }
+
+            if (apptDao.checkNewApptForOverlap(customer.getCustomerId(), startDateTime.toLocalDate(), endDateTime.toLocalDate(), startDateTime.toLocalTime(), endDateTime.toLocalTime())) {
+                showError("Error: Appointment overlaps with an existing appointment.");
+                return;
+            }
+
+            int rowsAffected = apptDao.addAppt(
+                    customer.getCustomerId(),
+                    user.getUserId(),
+                    contact.getContactId(),
+                    title,
+                    description,
+                    location,
+                    type,
+                    startDateTime,
+                    endDateTime
+            );
+
+            if (rowsAffected > 0) {
+                loadMainAppointmentsView();
+            } else {
+                showError("Error: Failed to add the appointment.");
+            }
+        } catch (Exception e) {
+            showError("Error: " + e.getMessage());
+            e.printStackTrace();
         }
+    }
+
+    private boolean isValidInput(String title, String description, String location, String type) {
+        return !(title.isBlank() || description.isBlank() || location.isBlank() || type.isBlank());
+    }
+
+    private boolean isValidTimes(AppointmentDAO apptDao, LocalDateTime start, LocalDateTime end) {
+        System.out.println("Checking the start time: " + start);
+        if (!apptDao.checkApptStartTime(start)){
+            showError("Error: Invalid start.");
+            return false;
+        }
+        if(!apptDao.checkApptEndTime(end)){
+            showError("Error: Invalid end time.");
+            return false;
+        }
+        return true;
+    }
+
+    private void showError(String errorMessage) {
+        System.err.println(errorMessage);
+        // Implement your UI error message display here
+    }
 
     private void loadMainAppointmentsView() {
         try {
             Stage stage = (Stage) addAppointmentSaveButton.getScene().getWindow();
-            Parent root = FXMLLoader.load(getClass().getResource("/view/MainAppointments.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/view/appointmentsMain.fxml"));
             Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.show();
@@ -190,15 +195,15 @@ public class addAppointmentController implements Initializable {
         System.out.println("Add Appointment: I am initialized!");
             try {
                 ZoneId opsZoneId = ZoneId.systemDefault();
-                ZoneId officZoneId = ZoneId.of("America/Los_Angeles");
-                LocalTime srtTime = LocalTime.of(7, 0);
-                //LocalTime endTime = LocalTime.of(17, 0);
+                ZoneId officZoneId = ZoneId.of("America/New_York");
+                LocalTime srtTime = LocalTime.of(8, 0);
+                LocalTime endTime = LocalTime.of(17, 0);
                 int hoursOfOperation = 10;
 
                 JDBC.openConnection();
                 ContactDAO contactDao = new ContactDAOImpl();
                 CustomerDAO customerDao = new CustomerDAOImpl();
-                UserDAO userDao = new UserDAOImpl(connection);
+                UserDAO userDao = new UserDAOImpl();
 
 
                 addAppointmentContact.setItems(contactDao.getAllContacts());
@@ -212,12 +217,20 @@ public class addAppointmentController implements Initializable {
                 addAppointmentStartDate.setValue(LocalDate.now());
                 addAppointmentEndDate.setValue(LocalDate.now());
 
-                // ComboBox start/end time
-                addAppointmentStartTime.setItems(TimeUtil.generateBusinessHours(opsZoneId, officZoneId, srtTime, hoursOfOperation));
+
+                //addAppointmentStartTime.setItems(TimeUtil.generateBusinessHours(opsZoneId, officZoneId, srtTime, hoursOfOperation));
+                addAppointmentStartTime.setItems(TimeUtil.openForBusiness(opsZoneId, officZoneId, srtTime, endTime));
                 addAppointmentStartTime.getSelectionModel().selectFirst();
 
-                addAppointmentEndTime.setItems(TimeUtil.generateBusinessHours(opsZoneId, officZoneId, srtTime, hoursOfOperation));
+                //addAppointmentEndTime.setItems(TimeUtil.generateBusinessHours(opsZoneId, officZoneId, srtTime, hoursOfOperation));
+                addAppointmentEndTime.setItems(TimeUtil.openForBusiness(opsZoneId, officZoneId, srtTime, endTime));
                 addAppointmentEndTime.getSelectionModel().selectFirst();
+
+                if (addAppointmentEndTime.getItems().contains(LocalTime.of(17, 0))) {
+                    addAppointmentEndTime.getSelectionModel().select(LocalTime.of(17, 0));
+                } else {
+                    addAppointmentEndTime.getSelectionModel().selectFirst();
+                }
 
             } catch (Exception e) {
                 throw new RuntimeException(e);

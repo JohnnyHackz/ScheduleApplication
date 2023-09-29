@@ -16,6 +16,9 @@ public class ContactDAOImpl implements ContactDAO{
 
     public ObservableList<Contact> getAllContacts(){
         try{
+            if (connection == null || !connection.isValid(5)){
+
+            }
             String sql = "Select * from contacts;";
             PreparedStatement ps = connection.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();

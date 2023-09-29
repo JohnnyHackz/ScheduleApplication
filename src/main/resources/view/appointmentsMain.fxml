@@ -36,7 +36,7 @@
             <TableColumn fx:id="appUserIdCol" prefWidth="92.0" text="User ID" />
          </columns>
       </TableView>
-      <Label layoutX="433.0" layoutY="44.0" prefHeight="36.0" prefWidth="109.0" text="Appointments" textAlignment="RIGHT">
+      <Label layoutX="433.0" layoutY="44.0" prefHeight="36.0" prefWidth="127.0" text="Appointments" textAlignment="RIGHT">
          <font>
             <Font size="18.0" />
          </font>
