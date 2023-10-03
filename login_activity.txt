@@ -1,0 +1,67 @@
+2023-09-30T13:17:33.501352100 - User: test, Login Attempt: Successful
+
+2023-09-30T14:07:05.193909100 - User: test, Login Attempt: Successful
+
+
+
+
+2023-10-02T17:17:23.527423 - User: , Login Attempt: Failed
+
+2023-10-02T17:17:27.855553800 - User: test, Login Attempt: Successful
+
+2023-10-03T10:58:34.650540600 - User: test, Login Attempt: Successful
+
+2023-10-03T11:04:03.722409600 - User: , Login Attempt: Failed
+
+2023-10-03T12:15:53.302373800 - User: test, Login Attempt: Failed
+
+2023-10-03T12:18:08.959804400 - User: , Login Attempt: Failed
+
+2023-10-03T12:19:08.950752500 - User: , Login Attempt: Failed
+
+2023-10-03T12:20:12.089151700 - User: , Login Attempt: Failed
+
+2023-10-03T12:25:18.329227800 - User: , Login Attempt: Failed
+
+2023-10-03T13:41:38.956099800 - User: , Login Attempt: Failed
+
+2023-10-03T14:09:21.631880400 - User: test, Login Attempt: Successful
+
+2023-10-03T14:27:37.022717400 - User: , Login Attempt: Failed
+
+2023-10-03T14:27:40.600235300 - User: test, Login Attempt: Successful
+
+2023-10-03T14:45:58.103722100 - User: test, Login Attempt: Successful
+
+2023-10-03T14:46:13.323389800 - User: test, Login Attempt: Successful
+
+2023-10-03T15:17:06.010719800 - User: test, Login Attempt: Successful
+
+2023-10-03T15:20:44.345010 - User: test, Login Attempt: Successful
+
+2023-10-03T16:47:11.804374500 - User: test, Login Attempt: Successful
+
+2023-10-03T11:48:01.889868200 - User: test, Login Attempt: Successful
+
+2023-10-03T11:48:35.150932200 - User: test, Login Attempt: Successful
+
+2023-10-03T11:48:59.226081300 - User: test, Login Attempt: Successful
+
+2023-10-03T11:49:55.697198200 - User: test, Login Attempt: Successful
+
+2023-10-03T11:47:52.165325600 - User: test, Login Attempt: Successful
+
+2023-10-03T11:56:37.867222100 - User: test, Login Attempt: Successful
+
+2023-10-03T12:08:39.466590400 - User: test, Login Attempt: Successful
+
+2023-10-03T12:12:44.092626100 - User: test, Login Attempt: Successful
+
+2023-10-03T12:18:52.361639 - User: test, Login Attempt: Successful
+
+2023-10-03T12:25:43.710440800 - User: test, Login Attempt: Successful
+
+2023-10-03T18:15:01.620742500 - User: test, Login Attempt: Successful
+
+2023-10-03T10:50:04.971063400 - User: test, Login Attempt: Successful
+
