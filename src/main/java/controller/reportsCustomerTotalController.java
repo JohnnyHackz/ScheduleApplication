@@ -18,7 +18,13 @@ import model.Reports;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-
+/**
+ * The reportsCustomerTotalController class manages the UI for displaying a summary of customer reports.
+ *
+ * This controller populates a table with report details about appointments, grouped by type and month.
+ * Users can view the total count of appointments for each type within a given month.
+ * It also provides a navigation option back to the main reports page.
+ */
 public class reportsCustomerTotalController implements Initializable {
     private Stage stage;
     private Parent scene;
@@ -27,6 +33,13 @@ public class reportsCustomerTotalController implements Initializable {
     public TableColumn reportsAppointmentInformationTypeAppointCol;
     public TableColumn reportsAppointmentInformationTotalAppointCol;
 
+
+    /**
+     * Sets up and populates the table with report details from the database.
+     *
+     * @param url
+     * @param resourceBundle
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         reportsAppointmentInformationTotalAppointCol.setCellValueFactory(new PropertyValueFactory<>("total"));

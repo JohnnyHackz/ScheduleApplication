@@ -22,6 +22,9 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Optional;
 
+/**
+ * The appointmentsMainController class serves as a controller for the application's main interface.
+ */
 public class appointmentsMainController {
 
 
@@ -54,9 +57,12 @@ public class appointmentsMainController {
     Parent scene;
 
 
-    private JDBC jdbc; //Initialize JDBC instance
-
-
+    /**
+     * Handles the event to add an appointment.
+     *
+     * @param event the action event
+     * @throws IOException in case of issues loading the fxml file.
+     */
     public void onActionAppointmentAdd(ActionEvent event) throws IOException {
         stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
         scene = FXMLLoader.load(getClass().getResource("/view/addAppointments.fxml"));
@@ -66,6 +72,13 @@ public class appointmentsMainController {
         System.out.println("I am clicked");
     }
 
+
+    /**
+     * Handles the event to update an appointment.
+     *
+     * @param actionEvent the action event
+     * @throws IOException in case of issues loading the fxml file.
+     */
     public void onActionAppointmentUpdate(ActionEvent actionEvent) throws IOException {
         Appointment pickedAppointment = (Appointment) mainScreenAppointmentsTable.getSelectionModel().getSelectedItem();
 
@@ -98,6 +111,12 @@ public class appointmentsMainController {
         }
     }
 
+
+    /**
+     * Handles the event to delete an appointment.
+     *
+     * @param actionEvent the action event
+     */
     public void onActionAppointmentDelete(ActionEvent actionEvent) {
         // Get the selected appointment
         Appointment selectedAppointment = (Appointment) mainScreenAppointmentsTable.getSelectionModel().getSelectedItem();
@@ -119,13 +138,32 @@ public class appointmentsMainController {
         alert.setContentText("The selected \"Appointment\" will be deleted. Do you wish to continue?");
         Optional<ButtonType> rs = alert.showAndWait();
 
-        if((rs.isPresent() && rs.get() == ButtonType.OK)){
-            System.out.println(appointmentDAO.deleteAppt(appointmentId, customerId));
-            JDBC.openConnection();
-            mainScreenAppointmentsTable.setItems(appointmentDAO.getAllAppointments()); // Refresh the appointments table
+        if(rs.isPresent() && rs.get() == ButtonType.OK){
+            int rowsAffected = appointmentDAO.deleteAppt(appointmentId, customerId);
+
+            if(rowsAffected > 0) {
+                Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
+                successAlert.setTitle("Deletion Successful");
+                successAlert.setContentText("Appointment with ID: " + appointmentId + " and type: " + selectedAppointment.getApptType() + " was successfully canceled.");
+                successAlert.showAndWait();
+
+                mainScreenAppointmentsTable.setItems(appointmentDAO.getAllAppointments()); // Refresh the appointments table
+            } else {
+                Alert failureAlert = new Alert(Alert.AlertType.ERROR);
+                failureAlert.setTitle("Deletion Failed");
+                failureAlert.setContentText("Failed to delete the appointment.");
+                failureAlert.showAndWait();
+            }
         }
     }
 
+
+    /**
+     * Handles the event to add a customer.
+     *
+     * @param actionEvent the action event
+     * @throws IOException in case of issues loading the fxml file.
+     */
     public void onActionCustomerAdd(ActionEvent actionEvent) throws IOException {
         stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
         scene = FXMLLoader.load(getClass().getResource("/view/addCustomer.fxml"));
@@ -133,14 +171,19 @@ public class appointmentsMainController {
         stage.show();
     }
 
+
+    /**
+     * Handles the event to update a customer.
+     *
+     * @param actionEvent the action event
+     * @throws IOException in case of issues loading the fxml file.
+     */
     public void onActionCustomerUpdate(ActionEvent actionEvent) throws IOException {
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource("/view/modifyCustomer.fxml"));
             Parent scene = loader.load();
 
-            //this is where I need to modify my code. I need to write in the logic for the save customer method so I can then
-            //call it here (UpdateCustomer is their version of SAVE customer.)
             modifyCustomerController updateCust = loader.getController();
 
             Customer pickedCustomer = (Customer) mainScreenCustomersTable.getSelectionModel().getSelectedItem();
@@ -157,6 +200,13 @@ public class appointmentsMainController {
             alert.showAndWait();
         }
     }
+
+
+    /**
+     * Handles the event to delete a customer.
+     *
+     * @param event the action event
+     */
     public void onActionCustomersDelete(ActionEvent event) {
         Customer selectedCustomer = (Customer) mainScreenCustomersTable.getSelectionModel().getSelectedItem();
         if (selectedCustomer == null){
@@ -173,19 +223,36 @@ public class appointmentsMainController {
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setContentText("The selected \"Customer\" and their corresponding \"Appointment(s)\" will be deleted. Do you wish to continue?");
-        alert.showAndWait();
         Optional<ButtonType> rs = alert.showAndWait();
 
         if((rs.isPresent() && rs.get()== ButtonType.OK)){
-            System.out.println(customerDAO.customerDelete(customerId));
-            JDBC.openConnection();
-            mainScreenCustomersTable.setItems(customerDAO.getAllCustomers());
+            int rowsAffected = customerDAO.customerDelete(customerId);
+
+            if(rowsAffected > 0) {
+                Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
+                successAlert.setTitle("Deletion Successful");
+                successAlert.setContentText("Customer with ID: " + customerId + " was successfully deleted.");
+                successAlert.showAndWait();
+
+                mainScreenCustomersTable.setItems(customerDAO.getAllCustomers()); // Refresh the customers table
+            } else {
+                Alert failureAlert = new Alert(Alert.AlertType.ERROR);
+                failureAlert.setTitle("Deletion Failed");
+                failureAlert.setContentText("Failed to delete the customer.");
+                failureAlert.showAndWait();
+            }
         }
 
 
     }
 
 
+    /**
+     * Handles the event to display reports.
+     *
+     * @param actionEvent the action event
+     * @throws IOException in case of issues loading the fxml file.
+     */
     public void onActionReports(ActionEvent actionEvent) throws IOException {
         stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
         scene = FXMLLoader.load(getClass().getResource("/view/reportsMain.fxml"));
@@ -195,6 +262,13 @@ public class appointmentsMainController {
         System.out.println("I am clicked");
     }
 
+
+    /**
+     * Handles the logout event.
+     *
+     * @param actionEvent the action event
+     * @throws IOException in case of issues loading the fxml file.
+     */
     public void onActionLogout(ActionEvent actionEvent) throws IOException {
         stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
         scene = FXMLLoader.load(getClass().getResource("/view/login.fxml"));
@@ -204,6 +278,11 @@ public class appointmentsMainController {
     }
 
 
+    /**
+     * Handles the event to filter appointments for the current month.
+     *
+     * @param actionEvent the action event
+     */
     public void onActionCurrentMonthRadioButton(ActionEvent actionEvent) {
         LocalDate today = LocalDate.now();
 
@@ -218,6 +297,12 @@ public class appointmentsMainController {
         //JDBC.closeConnection();
     }
 
+
+    /**
+     * Handles the event to display all appointments.
+     *
+     * @param actionEvent the action event
+     */
     public void onActionAllAppointmentsRadioButton(ActionEvent actionEvent) {
         // Opens database connection
         JDBC.openConnection();
@@ -231,6 +316,11 @@ public class appointmentsMainController {
     }
 
 
+    /**
+     * Initializes the controller. This method is automatically called when the FXML is loaded.
+     *
+     * @throws SQLException in case of issues connecting to the database.
+     */
     @FXML
     public void initialize() throws SQLException {
 
@@ -269,6 +359,11 @@ public class appointmentsMainController {
 
     }
 
+    /**
+     * Handles the event to filter appointments for the current week.
+     *
+     * @param actionEvent the action event
+     */
     public void onActionCurrentWeekRadioButton(ActionEvent actionEvent) {
         LocalDate today = LocalDate.now();
 

@@ -9,14 +9,21 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import static helper.JDBC.connection;
-
+/**
+ * DivisionDAOImpl provides the concrete implementation of the DivisionDAO interface.
+ * This class interacts with the database to perform CRUD operations on Division entities.
+ */
 public class DivisionDAOImpl implements DivisionDAO {
 
     ObservableList<Division> divIdByCountry = FXCollections.observableArrayList();
     ObservableList<Division> everyDivision = FXCollections.observableArrayList();
 
 
-
+    /**
+     * Fetches all divisions along with their associated country information from the database.
+     *
+     * @return an ObservableList of all divisions.
+     */
     @Override
     public ObservableList<Division> getAllDivisions() {
         try {
@@ -40,6 +47,12 @@ public class DivisionDAOImpl implements DivisionDAO {
 
     }
 
+    /**
+     * Retrieves a specific division based on the provided division ID.
+     *
+     * @param divisionId the ID of the division to retrieve.
+     * @return the Division object if found, or null if not.
+     */
     @Override
     public Division getDivisionId(int divisionId) {
         try {
@@ -63,7 +76,12 @@ public class DivisionDAOImpl implements DivisionDAO {
         return null;
     }
 
-
+    /**
+     * Fetches divisions based on the provided country ID.
+     *
+     * @param countryId the ID of the country to retrieve divisions for.
+     * @return an ObservableList of divisions associated with the provided country ID.
+     */
     @Override
     public ObservableList<Division> getDivByCountries(int countryId) {
         try {
@@ -86,58 +104,65 @@ public class DivisionDAOImpl implements DivisionDAO {
 
         return divIdByCountry;
     }
-        @Override
-    public int addDivisionByName(String divisionName, int countryId) {
-            int rowsAffected = 0;
-            try {
-                String sql = "INSERT INTO first_level_divisions (Division, Country_ID) VALUES(?,?)";
-                PreparedStatement ps = connection.prepareStatement(sql);
-                ps.setString(1, divisionName);
-                ps.setInt(2, countryId);
-                rowsAffected = ps.executeUpdate();
 
-                if (rowsAffected > 0) {
-                    System.out.println("Division INSERT was successful!");
-                } else {
-                    System.out.println("Division INSERT failed!");
-                }
-            } catch (Exception e) {
-                System.out.println("Error: " + e.getMessage());
+
+    /**
+     * Adds a new division with the given name and country ID to the database.
+     *
+     * @param divisionName the name of the new division.
+     * @param countryId    the ID of the country the division belongs to.
+     * @return the number of rows affected in the database.
+     */
+    @Override
+    public int addDivisionByName(String divisionName, int countryId) {
+        int rowsAffected = 0;
+        try {
+            String sql = "INSERT INTO first_level_divisions (Division, Country_ID) VALUES(?,?)";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, divisionName);
+            ps.setInt(2, countryId);
+            rowsAffected = ps.executeUpdate();
+
+            if (rowsAffected > 0) {
+                System.out.println("Division INSERT was successful!");
+            } else {
+                System.out.println("Division INSERT failed!");
             }
-            return rowsAffected;
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        return rowsAffected;
 
     }
 
+    /**
+     * Updates the name of a division for a specific country.
+     *
+     * @param currentDivisionName the current name of the division.
+     * @param countryId           the ID of the country the division belongs to.
+     * @param newDivisionName     the new name for the division.
+     * @return the number of rows affected in the database.
+     */
     @Override
     public int updateDivNamebyCountry(String currentDivisionName, int countryId, String newDivisionName) {
         int rowsAffected = 0;
-            try {
-                String sql = "UPDATE first_level_divisions SET Division=? WHERE Division=? AND Country_ID=?";
-                PreparedStatement ps = connection.prepareStatement(sql);
-                ps.setString(1, newDivisionName);
-                ps.setString(2, currentDivisionName);
-                ps.setInt(3, countryId);
-                rowsAffected = ps.executeUpdate();
+        try {
+            String sql = "UPDATE first_level_divisions SET Division=? WHERE Division=? AND Country_ID=?";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, newDivisionName);
+            ps.setString(2, currentDivisionName);
+            ps.setInt(3, countryId);
+            rowsAffected = ps.executeUpdate();
 
-                if (rowsAffected > 0) {
-                    System.out.println(currentDivisionName + " division UPDATE was successful!");
-                    System.out.println("New division name: " + newDivisionName);
-                } else {
-                    System.out.println(currentDivisionName + " division name UPDATE Failed!");
-                }
-            } catch (Exception e) {
-                System.out.println("Error: " + e.getMessage());
+            if (rowsAffected > 0) {
+                System.out.println(currentDivisionName + " division UPDATE was successful!");
+                System.out.println("New division name: " + newDivisionName);
+            } else {
+                System.out.println(currentDivisionName + " division name UPDATE Failed!");
             }
-            return rowsAffected;
-    }
-
-    @Override
-    public void updateDivCountry(String divisionName, int currentCountryId, int newCountryId) {
-
-    }
-
-    @Override
-    public void deleteDivisonIdAndName(int divisionId, String divisionName) {
-
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        return rowsAffected;
     }
 }

@@ -9,17 +9,17 @@
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="297.0" prefWidth="361.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.loginController">
     <children>
         <Label blendMode="DARKEN" layoutX="20.0" layoutY="17.0" prefHeight="262.0" prefWidth="322.0" style="-fx-border-color: black; -fx-padding: 15; -fx-border-radius: 5; -fx-background-color: #D3D3D3;" />
-        <TextField fx:id="loginPageUserName" layoutX="129.0" layoutY="90.0" />
-        <TextField fx:id="loginPagePassword" layoutX="129.0" layoutY="122.0" />
-        <Label fx:id="loginField" layoutX="152.0" layoutY="32.0" text="Login" textFill="#1669d7">
+        <TextField fx:id="loginPageUserName" layoutX="144.0" layoutY="95.0" prefHeight="25.0" prefWidth="134.0" />
+        <TextField fx:id="loginPagePassword" layoutX="144.0" layoutY="127.0" prefHeight="25.0" prefWidth="134.0" />
+        <Label fx:id="loginField" layoutX="40.0" layoutY="32.0" prefHeight="32.0" prefWidth="193.0" text="Login" textFill="#1669d7">
          <font>
             <Font name="Arial" size="28.0" />
          </font></Label>
         <Button fx:id="loginPageLogin" layoutX="152.0" layoutY="222.0" mnemonicParsing="false" onAction="#loginPageLoginButton" text="Login" />
         <Button fx:id="cancelButtonField" layoutX="241.0" layoutY="222.0" mnemonicParsing="false" onAction="#loginPageCancelButton" text="Exit" />
-        <Label fx:id="locationText" layoutX="61.0" layoutY="174.0" text="Location" />
-        <Label fx:id="usernameField" layoutX="52.0" layoutY="94.0" text="Username" />
-        <Label fx:id="passwordField" layoutX="52.0" layoutY="126.0" text="Password" />
-        <TextField fx:id="loginPageLocation" editable="false" layoutX="129.0" layoutY="170.0" prefHeight="26.0" prefWidth="176.0" style="-fx-background-color: white;" />
+        <Label fx:id="locationText" layoutX="31.0" layoutY="175.0" prefHeight="17.0" prefWidth="81.0" text="Location" />
+        <Label fx:id="usernameField" layoutX="31.0" layoutY="99.0" prefHeight="17.0" prefWidth="105.0" text="Username" />
+        <Label fx:id="passwordField" layoutX="31.0" layoutY="131.0" prefHeight="17.0" prefWidth="87.0" text="Password" />
+        <TextField fx:id="loginPageLocation" editable="false" layoutX="130.0" layoutY="170.0" prefHeight="26.0" prefWidth="175.0" style="-fx-background-color: white;" />
     </children>
 </AnchorPane>

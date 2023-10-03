@@ -24,6 +24,14 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * Controller for the Modify Customer View.
+ * <p>
+ * This controller facilitates the functionality needed to modify an existing customer.
+ * It provides functionalities to fetch details from the form fields,
+ * extract customer details to update, and handle actions for the "Save" and "Cancel" buttons.
+ * </p>
+ */
 public class modifyCustomerController implements Initializable {
 
     @FXML
@@ -63,6 +71,12 @@ public class modifyCustomerController implements Initializable {
     Stage stage;
     Parent scene;
 
+    /**
+     * Handles the action of the "Cancel" button. Redirects the user to the main view.
+     *
+     * @param event the action event
+     * @throws IOException if there's an error in loading the scene
+     */
     @FXML
     void onActionModCustomerCancelButton(ActionEvent event) throws IOException {
         stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
@@ -71,6 +85,12 @@ public class modifyCustomerController implements Initializable {
         stage.show();
     }
 
+    /**
+     * Handles the action of the "Save" button. Saves the modifications of the customer.
+     *
+     * @param event the action event
+     * @throws IOException if there's an error in transitioning views
+     */
     @FXML
     void onActionModCustomerSaveButton(ActionEvent event) throws IOException {
         CustomerData customerData = getCustomerDataFromForm();
@@ -99,6 +119,11 @@ public class modifyCustomerController implements Initializable {
         }
     }
 
+    /**
+     * Fetches customer details from the form fields.
+     *
+     * @return an instance of {@link CustomerData} containing the extracted form details or null if an error occurs
+     */
     private CustomerData getCustomerDataFromForm() {
         try {
             return new CustomerData(
@@ -116,6 +141,12 @@ public class modifyCustomerController implements Initializable {
         }
     }
 
+    /**
+     * Redirects the user to the main view.
+     *
+     * @param event the action event
+     * @throws IOException if there's an error in loading the scene
+     */
     private void switchToMainView(ActionEvent event) throws IOException {
         stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
         scene = FXMLLoader.load(getClass().getResource("/view/appointmentsMain.fxml"));
@@ -123,7 +154,10 @@ public class modifyCustomerController implements Initializable {
         stage.show();
     }
 
-    // Helper class to encapsulate customer data
+
+    /**
+     * Inner class to encapsulate customer data.
+     */
     private class CustomerData {
         int id;
         String name;
@@ -145,6 +179,16 @@ public class modifyCustomerController implements Initializable {
     }
 
 
+    /**
+     * Populates the modify customer form with the details of a selected customer.
+     * <p>
+     * This method fetches the details of a given customer and sets the relevant form fields
+     * with the respective values. It also manages the country and division selection for
+     * the customer, ensuring that the appropriate country and division options are pre-selected
+     * based on the customer's existing data.
+     * </p>
+     * @param pickedCustomer the customer to be modified
+     */
     public void updateCustomer(Customer pickedCustomer) {
         JDBC.openConnection();
         CountryDAO countryDAO = new CountryDAOImpl();
@@ -179,7 +223,12 @@ public class modifyCustomerController implements Initializable {
     }
 
 
-
+    /**
+     * Initialization method. Called when the view is loaded.
+     *
+     * @param url the location to resolve relative paths of resources
+     * @param resourceBundle the resources used to localize the root object
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         JDBC.openConnection();
@@ -188,6 +237,11 @@ public class modifyCustomerController implements Initializable {
         modCustomerCountry.setItems(countryDAO.getAllCountries());
     }
 
+    /**
+     * Handles the action of picking a country from the dropdown. Sets the relevant divisions for the selected country.
+     *
+     * @param actionEvent the action event
+     */
     public void onActionPickCountry(ActionEvent actionEvent) {
         countryId = modCustomerCountry.getValue().getCountryId();
         modCustomerStateProvince.setItems(ListManager.getFilteredDivisions(countryId));

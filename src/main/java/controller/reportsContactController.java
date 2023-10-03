@@ -5,6 +5,8 @@ import DAO.AppointmentDAOImpl;
 import DAO.ContactDAO;
 import DAO.ContactDAOImpl;
 import helper.JDBC;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -16,14 +18,23 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import model.Appointment;
 import model.Contact;
 
 import java.io.IOException;
 
+/**
+ * The reportsContactController class manages the UI for contact-related reports.
+ * Users can view and refresh appointments, select contacts from a dropdown, and filter appointments by contact.
+ * Additionally, it offers navigation back to the main reports page.
+ */
 public class reportsContactController {
-    public TableView reportsContactTableView;
-    public TableView reportsTotalAppointmentsTableview;
-    public TableView reportsTotalCustOfDivisionTableview;
+    @FXML
+    private Button refreshTableButton;
+    @FXML
+    private TableView reportsContactTableView;
+    @FXML
+    private TableColumn reportsContactInformationAppointmentIDCol;
 
     @FXML
     private TableColumn reportsContactInformationTypeCol;
@@ -38,18 +49,7 @@ public class reportsContactController {
     @FXML
     private TableColumn reportsContactInformationCustomerIDCol;
     @FXML
-    public ComboBox <Contact> reportsContactInformationContactsComboBox;
-    @FXML
-    private TableColumn reportsAppointmentInformationMonthAppointCol;
-    @FXML
-    private TableColumn reportsAppointmentInformationTypeAppointCol;
-    @FXML
-    private TableColumn reportsAppointmentInformationTotalAppointCol;
-    @FXML
-    private TableColumn reportsDivisionInformationDivNameCol;
-    @FXML
-    private TableColumn reportsDivisionInformationTotalCustomersCol;
-
+    public ComboBox<Contact> reportsContactInformationContactsComboBox;
     @FXML
     private TableColumn contactInformationIDCol;
     @FXML
@@ -58,13 +58,21 @@ public class reportsContactController {
     Stage stage;
     Parent scene;
 
+    /**
+     * Handles the selection of a contact from the ComboBox and populates the table
+     * with appointments related to the selected contact.
+     */
+    public void onActionReportsContactInformationComboBox() {
+        fillTable();
 
-    public void onActionReportsContactInformationComboBox(ActionEvent actionEvent) {
-        fillTable(actionEvent);
     }
 
-
-
+    /**
+     * Handles the action of navigating back to the main reports page.
+     *
+     * @param actionEvent the event triggered by the user's action.
+     * @throws IOException if there's an error during the scene transition.
+     */
     public void onActionReportsBackButton(ActionEvent actionEvent) throws IOException {
         stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
         scene = FXMLLoader.load(getClass().getResource("/view/reportsMain.fxml"));
@@ -74,22 +82,60 @@ public class reportsContactController {
         System.out.println("I am clicked");
     }
 
-    public void onActionReportsLogoutButton(ActionEvent actionEvent) throws IOException {
-        stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
-        scene = FXMLLoader.load(getClass().getResource("/view/login.fxml"));
-        stage.setScene(new Scene(scene));
-        stage.show();
+    /**
+     * Fills the TableView with appointments related to the selected contact.
+     */
+    public void fillTable() {
+        JDBC.openConnection();
 
-        System.out.println("I am clicked");
+        // Get the selected contactId from the ComboBox
+        int contactId = reportsContactInformationContactsComboBox.getSelectionModel().getSelectedItem().getContactId();
+
+        // Fetch all appointments
+        AppointmentDAOImpl appointmentDAO = new AppointmentDAOImpl();
+        ObservableList<Appointment> allAppointments = appointmentDAO.getAllAppointments();
+        ObservableList<Appointment> filteredAppointments = FXCollections.observableArrayList();
+
+        // Filter appointments based on contactId
+        for (Appointment appt : allAppointments) {
+            if (appt.getContactId() == contactId) {
+                filteredAppointments.add(appt);
+            }
+        }
+
+        // Set the TableView with the filtered appointments
+        reportsContactTableView.setItems(filteredAppointments);
+
+        JDBC.closeConnection();
     }
 
-    public void fillTable(ActionEvent actionEvent){
+
+    /**
+     * Refreshes the TableView by fetching all appointments and setting them in the TableView.
+     *
+     * @param actionEvent the event triggered by the user's action.
+     */
+    public void onActionRefreshTable(ActionEvent actionEvent) {
+        refreshTable();
+    }
+
+    private void refreshTable() {
         JDBC.openConnection();
         AppointmentDAO appointmentDAO = new AppointmentDAOImpl();
-        int contactId = reportsContactInformationContactsComboBox.getSelectionModel().getSelectedItem().getContactId();
-        reportsContactTableView.setItems(appointmentDAO.getApptsByContact(contactId));
+
+        // Fetch all appointments
+        ObservableList<Appointment> allAppointments = appointmentDAO.getAllAppointments();
+
+        // Set the TableView with all the appointments
+        reportsContactTableView.setItems(allAppointments);
+
+        JDBC.closeConnection();
     }
 
+    /**
+     * Initializes the TableView columns and populates the ComboBox with available contacts.
+     * It also sets up an event listener for the ComboBox to update the table upon contact selection.
+     */
     @FXML
     public void initialize() {
 
@@ -104,17 +150,22 @@ public class reportsContactController {
         reportsContactInformationStartDateTimeCol.setCellValueFactory(new PropertyValueFactory<>("startDtTime"));
         reportsContactInformationEndDateTimeCol.setCellValueFactory(new PropertyValueFactory<>("endDtTime"));
         reportsContactInformationCustomerIDCol.setCellValueFactory(new PropertyValueFactory<>("customerId"));
-
+        reportsContactInformationAppointmentIDCol.setCellValueFactory(new PropertyValueFactory<>("apptId"));
 
 
         JDBC.openConnection();
         AppointmentDAO appointmentDAO = new AppointmentDAOImpl();
-
         reportsContactTableView.setItems(appointmentDAO.getAllAppointments());
         ContactDAO contactDAO = new ContactDAOImpl();
         reportsContactInformationContactsComboBox.setItems(contactDAO.getAllContacts());
-
         JDBC.closeConnection();
 
+        reportsContactInformationContactsComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                fillTable(); // Update table on contact selection
+            }
+        });
+
     }
+
 }

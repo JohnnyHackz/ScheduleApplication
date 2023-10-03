@@ -10,8 +10,16 @@ import java.sql.SQLException;
 
 import static helper.JDBC.connection;
 
+/**
+ * Implementation class for the User Data Access Object interface.
+ */
 public class UserDAOImpl implements UserDAO {
 
+    /**
+     * Retrieves all users from the database.
+     *
+     * @return an ObservableList containing all the users
+     */
     ObservableList<User> everyUser = FXCollections.observableArrayList();
     public ObservableList<User> getAllUsers() {
         try{
@@ -31,6 +39,13 @@ public class UserDAOImpl implements UserDAO {
         return everyUser;
     }
 
+
+    /**
+     * Retrieves a specific user based on the provided User ID.
+     *
+     * @param userId The ID of the user to retrieve
+     * @return a User object or null if the user does not exist
+     */
     public User getUser(int userId) {
         try{
             String sql = "Select * From users Where User_ID=?";
@@ -51,26 +66,14 @@ public class UserDAOImpl implements UserDAO {
         }
     }
 
-    public int updateUserPassword(String userName, String newPassword, String currentPassword) {
-        try {
-            String query = "UPDATE users SET Password=? WHERE User_Name=? AND Password=?";
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setString(1, newPassword);
-            statement.setString(2, userName);
-            statement.setString(3, currentPassword);
-            int rowsAffected = statement.executeUpdate();
-
-            if (rowsAffected > 0) {
-                System.out.println(userName + " password UPDATE was successful!");
-            } else {
-                System.out.println(userName + " password UPDATE Failed!");
-            }
-            return rowsAffected;
-        } catch (SQLException e) {
-            throw new RuntimeException("Error updating password.", e);
-        }
-    }
-
+    /**
+     * Updates the user name of a specific user, identified by the current user name and password.
+     *
+     * @param currentUserName The current name of the user
+     * @param newUserName     The new user name
+     * @param password        The password of the user (for verification)
+     * @return the number of rows affected by the update
+     */
     public int updateUserName(String currentUserName, String newUserName, String password) {
         try {
             String query = "UPDATE users SET User_Name=? WHERE User_Name=? AND Password=?";
@@ -92,6 +95,12 @@ public class UserDAOImpl implements UserDAO {
         }
     }
 
+    /**
+     * Deletes a user based on the provided User ID.
+     *
+     * @param userId The ID of the user to delete
+     * @return the number of rows affected by the delete
+     */
     public int deleteUser(int userId) {
         try {
             String query = "DELETE FROM users WHERE User_ID=?";

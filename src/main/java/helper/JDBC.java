@@ -5,7 +5,14 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-
+/**
+ * A utility class for managing JDBC database connections.
+ * <p>
+ * The class provides helper methods for opening, accessing, and closing JDBC database connections.
+ * It also aids in the preparation of SQL statements and manages connection details such as the JDBC URL,
+ * username, and password.
+ * </p>
+ */
 public class JDBC {
     private static PreparedStatement preparedStatement;
     private static final String protocol = "jdbc";
@@ -18,6 +25,12 @@ public class JDBC {
     private static String password = "Passw0rd!"; // Password
     public static Connection connection;  // Connection Interface
 
+
+    /**
+     * Opens and returns a connection to the database.
+     *
+     * @return The active Connection object, or null if the connection failed.
+     */
     public static Connection openConnection() {
         Connection conn = null;
         try {
@@ -33,19 +46,43 @@ public class JDBC {
         return conn;
     }
 
+    /**
+     * Provides access to the currently active database connection.
+     *
+     * @return The current active {@link Connection} object.
+     */
     public static Connection getConnection(){
         return connection;
     }
 
+
+    /**
+     * Prepares an SQL statement with the given connection and SQL string.
+     *
+     * @param conn          The database Connection to use.
+     * @param sqlStatement  The SQL statement to prepare.
+     * @throws SQLException If there is an error in setting the prepared statement.
+     */
     public static void setPreparedStatement(Connection conn, String sqlStatement) throws SQLException {
         preparedStatement = conn.prepareStatement(sqlStatement);
     }
 
+
+    /**
+     * Returns the current prepared SQL statement.
+     *
+     * @return The active PreparedStatement object.
+     */
     public static PreparedStatement getPreparedStatement() {
 
         return preparedStatement;
     }
 
+
+    /**
+     * Closes the current active database connection.
+     * If any error occurs during the closure, the error message is printed to the console.
+     */
     public static void closeConnection() {
         try {
             connection.close();

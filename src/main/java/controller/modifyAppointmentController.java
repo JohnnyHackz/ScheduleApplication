@@ -1,6 +1,7 @@
 package controller;
 
 import DAO.*;
+import helper.AlertHelper;
 import helper.JDBC;
 import helper.TimeUtil;
 import javafx.event.ActionEvent;
@@ -23,7 +24,13 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.ResourceBundle;
-
+/**
+ * Controller for the modify appointment view in a JavaFX application.
+ * <p>
+ * This controller is responsible for handling actions related to modifying existing appointments, including
+ * saving changes to the database, validating form data, and populating fields with the selected appointment's details.
+ * </p>
+ */
 public class modifyAppointmentController implements Initializable {
     @FXML
     private ComboBox<LocalTime> modAppointmentStartTime;
@@ -62,7 +69,16 @@ public class modifyAppointmentController implements Initializable {
     Parent scene;
 
 
-
+    /**
+     * Handles the save button action.
+     * <p>
+     * Retrieves appointment details from the form, validates input, checks for overlapping appointments,
+     * and updates the appointment in the database.
+     * </p>
+     *
+     * @param event the ActionEvent triggered by the button click
+     * @throws IOException if there's an issue loading the next view
+     */
     public void onActionModSaveButton(ActionEvent event) throws IOException {
         AppointmentData apptData = getAppointmentDataFromForm();
 
@@ -71,8 +87,19 @@ public class modifyAppointmentController implements Initializable {
             return;
         }
 
-        // Create an instance of AppointmentDAO to update the appointment
+        if(!isValidInput(apptData.apptTitle, apptData.apptDesc, apptData.apptLocation, apptData.apptType)){
+            AlertHelper.showError("Error", "Please fill in all fields.");
+            return;
+        }
+
         AppointmentDAO apptDAO = new AppointmentDAOImpl();
+
+        // Check for overlapping appointments
+        if (apptDAO.appointmentOverlapExceptCurrent(apptData.customerId, apptData.startDtTime, apptData.endDtTime, apptData.apptId)) {
+            AlertHelper.showError("Error", "The modified appointment overlaps with an existing appointment.");
+            return;
+        }
+
 
         // Call the appointmentUpdate method to update the appointment in the database
         int rowsAffected = apptDAO.updateAppt(
@@ -86,7 +113,6 @@ public class modifyAppointmentController implements Initializable {
                 apptData.apptType,
                 apptData.startDtTime,
                 apptData.endDtTime
-
         );
 
         if (rowsAffected > 0) {
@@ -100,6 +126,26 @@ public class modifyAppointmentController implements Initializable {
     }
 
 
+    /**
+     * Checks if the given input fields are filled out and not blank.
+     *
+     * @param apptTitle       title of the appointment
+     * @param apptDesc        description of the appointment
+     * @param apptLocation    location of the appointment
+     * @param apptType        type of the appointment
+     * @return true if all fields are filled, false otherwise
+     */
+    private boolean isValidInput(String apptTitle, String apptDesc, String apptLocation, String apptType) {
+        return !(apptTitle.isBlank() || apptDesc.isBlank() || apptLocation.isBlank() || apptType.isBlank());
+    }
+
+
+    /**
+     * Inner class representing the structured data of an appointment.
+     * <p>
+     * This is used to store form data in an organized way for easy processing and validation.
+     * </p>
+     */
     private class AppointmentData {
         int apptId;
         int customerId;
@@ -128,6 +174,20 @@ public class modifyAppointmentController implements Initializable {
         }
     }
 
+    /**
+     * Extracts appointment details from the form fields and creates an {@link AppointmentData} instance.
+     * <p>
+     * This method reads the values from the form fields, creates a LocalDateTime for the start and end times,
+     * and initializes a new AppointmentData object using these details. The method provides error handling
+     * for common exceptions like NumberFormatException and NullPointerException, showing appropriate alert dialogs
+     * using the AlertHelper utility.
+     * </p>
+     *
+     * @return an instance of AppointmentData containing the extracted form details, or null if any error occurs
+     * @throws NumberFormatException if parsing numeric fields like ID fails
+     * @throws NullPointerException if any of the required fields are missing or null
+     * @see AppointmentData
+     */
     private AppointmentData getAppointmentDataFromForm() {
         try {
             LocalDateTime startDateTime = LocalDateTime.of(modAppointmentStartDate.getValue(), (LocalTime) modAppointmentStartTime.getValue());
@@ -146,24 +206,26 @@ public class modifyAppointmentController implements Initializable {
                     endDateTime
             );
         } catch (NumberFormatException e) {
-            showAlert("Number Format Error", "Please make sure all number fields (like ID) are filled in correctly.");
+            AlertHelper.showError("Number Format Error", "Please make sure all number fields are filled in correctly.");
             return null;
         } catch (NullPointerException e) {
-            showAlert("Null Data Error", "Please make sure all required fields are filled in.");
+            AlertHelper.showError("Null Data Error", "Please make sure all required fields are filled in.");
             return null;
         } catch (Exception e) {
-            showAlert("Error", "An unexpected error occurred. Details: " + e.getMessage());
+            AlertHelper.showError("Error", "An unexpected error occurred. Details: " + e.getMessage());
             return null;
         }
     }
-    private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
 
+    /**
+     * Handles the cancel button action.
+     * <p>
+     * Returns the user to the main appointment view without saving any changes.
+     * </p>
+     *
+     * @param event the ActionEvent triggered by the button click
+     * @throws IOException if there's an issue loading the main view
+     */
     public void onActionModCancelButton(ActionEvent event) throws IOException {
         stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
         scene = FXMLLoader.load(getClass().getResource("/view/appointmentsMain.fxml"));
@@ -171,7 +233,14 @@ public class modifyAppointmentController implements Initializable {
         stage.show();
     }
 
-
+    /**
+     * Populates the form fields with the details of the selected appointment.
+     * <p>
+     * This is typically called when transitioning to the modify appointment view, to pre-fill the form with the existing details.
+     * </p>
+     *
+     * @param pickedAppointment the appointment selected for modification
+     */
     public void updateAppointment(Appointment pickedAppointment) {
         JDBC.openConnection();
         ContactDAO contactDAO = new ContactDAOImpl();
@@ -218,6 +287,15 @@ public class modifyAppointmentController implements Initializable {
         modAppointmentEndTime.getSelectionModel().select(pickedAppointment.getEndTime());
     }
 
+    /**
+     * Initializes the view components.
+     * <p>
+     * Sets default values and populates comboboxes. This method is called automatically by JavaFX.
+     * </p>
+     *
+     * @param url a reference to the location of the FXML file
+     * @param resourceBundle a reference to the localized strings, if any
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         ZoneId opsZoneId = ZoneId.systemDefault();

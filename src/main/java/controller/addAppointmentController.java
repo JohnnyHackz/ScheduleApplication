@@ -1,6 +1,7 @@
 package controller;
 
 import DAO.*;
+import helper.AlertHelper;
 import helper.JDBC;
 import helper.TimeUtil;
 import javafx.event.ActionEvent;
@@ -26,7 +27,11 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.ResourceBundle;
-
+/**
+ * Controller for adding appointments.
+ * This class provides functionality for adding appointments with the necessary details.
+ * The appointments are then saved to a data source.
+ */
 public class addAppointmentController implements Initializable {
 
     @FXML
@@ -74,23 +79,17 @@ public class addAppointmentController implements Initializable {
     @FXML
     private AnchorPane addAppointmentView;
 
-    public int apptId;
+
     public int customerId;
-    public int userId;
-    public int contactId;
-    public String apptTitle;
-    public String apptDesc;
-    public String apptLocation;
-    public String apptType;
-    public LocalDateTime startDtTime;
-    public LocalDateTime endDtTime;
-    public LocalDate startDate;
-    public LocalDate endDate;
-    public LocalTime startTime;
-    public LocalTime endTime;
     Stage stage;
     Parent scene;
 
+    /**
+     * Cancels the add appointment action and loads the main appointment view.
+     *
+     * @param event The event triggered by clicking the cancel button.
+     * @throws IOException if there is an issue loading the FXML.
+     */
     @FXML
     void onActionAddAppointmentCancel(ActionEvent event) throws IOException {
         stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
@@ -99,6 +98,22 @@ public class addAppointmentController implements Initializable {
         stage.show();
     }
 
+    /**
+     * Handles the action event for the "Add Appointment Save" button.
+     * <p>
+     * This method attempts to:
+     * <ol>
+     *     <li>Retrieve and validate input from various appointment fields.</li>
+     *     <li>Check for time validity and overlapping appointments.</li>
+     *     <li>Add the appointment to the database.</li>
+     *     <li>Load the main appointments view upon successful addition.</li>
+     * </ol>
+     * Any errors or issues encountered during these operations will trigger appropriate error alerts.
+     * </p>
+     *
+     * @param event The action event that initiated this method call.
+     * @throws IOException if an I/O error occurs.
+     */
     @FXML
     void onActionAddAppointmentSaveButton(ActionEvent event) throws IOException {
         try {
@@ -113,8 +128,7 @@ public class addAppointmentController implements Initializable {
             LocalDateTime endDateTime = LocalDateTime.of(addAppointmentEndDate.getValue(), addAppointmentEndTime.getValue());
 
             if (!isValidInput(title, description, location, type)) {
-                showError("Error: Please fill in all fields.");
-                return;
+                AlertHelper.showInfo("Error: Please fill in all fields.");
             }
 
             AppointmentDAO apptDao = new AppointmentDAOImpl();
@@ -122,12 +136,16 @@ public class addAppointmentController implements Initializable {
             if (!isValidTimes(apptDao, startDateTime, endDateTime)) return;
 
             if (startDateTime.toLocalTime().isAfter(endDateTime.toLocalTime())) {
-                showError("Error: End time must be after start time.");
+                AlertHelper.showError("Error: ", "End time must be after start time.");
+                return;
+            }
+            if (startDateTime.toLocalTime().equals(endDateTime.toLocalTime())){
+                AlertHelper.showError("Invalid Input", "Error: Invalid end appointment time. Select a new end appointment time.");
                 return;
             }
 
-            if (apptDao.checkNewApptForOverlap(customer.getCustomerId(), startDateTime.toLocalDate(), endDateTime.toLocalDate(), startDateTime.toLocalTime(), endDateTime.toLocalTime())) {
-                showError("Error: Appointment overlaps with an existing appointment.");
+            if (apptDao.appointmentOverlap(customer.getCustomerId(), startDateTime, endDateTime)) {
+                AlertHelper.showError("Error: ", "Appointment overlaps with an existing appointment.");
                 return;
             }
 
@@ -146,36 +164,54 @@ public class addAppointmentController implements Initializable {
             if (rowsAffected > 0) {
                 loadMainAppointmentsView();
             } else {
-                showError("Error: Failed to add the appointment.");
+                AlertHelper.showError("Error: ", "Failed to add the appointment.");
             }
         } catch (Exception e) {
-            showError("Error: " + e.getMessage());
-            e.printStackTrace();
+            AlertHelper.displayError("Error: " + e.getMessage(), e);
         }
     }
 
+
+    /**
+     * Checks if the provided appointment details are valid.
+     *
+     * @param title       The title of the appointment.
+     * @param description The description of the appointment.
+     * @param location    The location of the appointment.
+     * @param type        The type of the appointment.
+     * @return true if the input is valid; false otherwise.
+     */
     private boolean isValidInput(String title, String description, String location, String type) {
         return !(title.isBlank() || description.isBlank() || location.isBlank() || type.isBlank());
     }
 
+
+    /**
+     * Validates the start and end times of the appointment.
+     *
+     * @param apptDao The AppointmentDAO instance.
+     * @param start   The start time of the appointment.
+     * @param end     The end time of the appointment.
+     * @return true if the times are valid; false otherwise.
+     */
     private boolean isValidTimes(AppointmentDAO apptDao, LocalDateTime start, LocalDateTime end) {
         System.out.println("Checking the start time: " + start);
         if (!apptDao.checkApptStartTime(start)){
-            showError("Error: Invalid start.");
+            AlertHelper.showError("Error: ", "Invalid start.");
             return false;
         }
         if(!apptDao.checkApptEndTime(end)){
-            showError("Error: Invalid end time.");
+            AlertHelper.showError("Error: ", "Invalid end time.");
             return false;
         }
         return true;
     }
 
-    private void showError(String errorMessage) {
-        System.err.println(errorMessage);
-        // Implement your UI error message display here
-    }
 
+
+    /**
+     * Loads the main appointments view.
+     */
     private void loadMainAppointmentsView() {
         try {
             Stage stage = (Stage) addAppointmentSaveButton.getScene().getWindow();
@@ -184,12 +220,17 @@ public class addAppointmentController implements Initializable {
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {
-            // Handle the IOException if loading the main view fails.
-            System.err.println("Error: " + e.getMessage());
-            e.printStackTrace();
+            AlertHelper.displayError("Error: ", e);
         }
     }
 
+    /**
+     * Initializes the add appointment view with default values.
+     * This method is called after the fxml file has been loaded.
+     *
+     * @param url            The location used to resolve relative paths for the root object.
+     * @param resourceBundle The resources used to localize the root object.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         System.out.println("Add Appointment: I am initialized!");
@@ -198,7 +239,6 @@ public class addAppointmentController implements Initializable {
                 ZoneId officZoneId = ZoneId.of("America/New_York");
                 LocalTime srtTime = LocalTime.of(8, 0);
                 LocalTime endTime = LocalTime.of(17, 0);
-                int hoursOfOperation = 10;
 
                 JDBC.openConnection();
                 ContactDAO contactDao = new ContactDAOImpl();
@@ -231,6 +271,20 @@ public class addAppointmentController implements Initializable {
                 } else {
                     addAppointmentEndTime.getSelectionModel().selectFirst();
                 }
+
+                // 1st lambda expressions here
+                addAppointmentStartDate.valueProperty().addListener((obs, oldDate, newDate) -> {
+                    if (newDate.isAfter(addAppointmentEndDate.getValue())) {
+                        addAppointmentEndDate.setValue(newDate);
+                    }
+                });
+
+                // 2nd lambda expressions here
+                addAppointmentStartTime.valueProperty().addListener((obs, oldTime, newTime) -> {
+                    if (newTime.isAfter(addAppointmentEndTime.getValue())) {
+                        addAppointmentEndTime.setValue(newTime.plusHours(1));
+                    }
+                });
 
             } catch (Exception e) {
                 throw new RuntimeException(e);

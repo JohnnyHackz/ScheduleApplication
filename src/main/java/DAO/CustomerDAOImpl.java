@@ -10,8 +10,18 @@ import java.sql.SQLException;
 
 import static helper.JDBC.connection;
 
+/**
+ * Implementation of the CustomerDAO interface, providing methods for
+ * CRUD operations on Customer objects.
+ */
 public class CustomerDAOImpl implements CustomerDAO{
     ObservableList<Customer> allCustomers = FXCollections.observableArrayList();
+
+    /**
+     * Fetches all customers from the database and returns them as an ObservableList.
+     *
+     * @return ObservableList of all customers.
+     */
     @Override
     public ObservableList<Customer> getAllCustomers() {
         try {
@@ -43,6 +53,13 @@ public class CustomerDAOImpl implements CustomerDAO{
         return allCustomers;
     }
 
+
+    /**
+     * Fetches a customer from the database using the given ID.
+     *
+     * @param customerId The ID of the customer to fetch.
+     * @return Customer object with the specified ID, or null if not found.
+     */
     @Override
     public Customer getCustomerId(int customerId) {
         try {
@@ -74,6 +91,13 @@ public class CustomerDAOImpl implements CustomerDAO{
         return null;
     }
 
+
+    /**
+     * Gets all customers associated with a specific division ID.
+     *
+     * @param divisionId ID of the division.
+     * @return ObservableList of customers associated with the division.
+     */
     @Override
     public ObservableList<Customer> getCustomerByDivisionID(int divisionId) {
         ObservableList<Customer> customersByDivision = FXCollections.observableArrayList();
@@ -107,6 +131,17 @@ public class CustomerDAOImpl implements CustomerDAO{
         return customersByDivision;
     }
 
+
+    /**
+     * Adds a new customer to the database.
+     *
+     * @param custName Name of the customer.
+     * @param custAddress Address of the customer.
+     * @param custPhoneNumber Phone number of the customer.
+     * @param divisionId Division ID associated with the customer.
+     * @param custPostalCode Postal code of the customer.
+     * @return Number of rows affected, i.e., 1 for success, 0 for failure.
+     */
     @Override
     public int addCustomer(String custName, String custAddress, String custPhoneNumber,
                            int divisionId, String custPostalCode) {
@@ -128,6 +163,18 @@ public class CustomerDAOImpl implements CustomerDAO{
         }
     }
 
+
+    /**
+     * Updates the details of a specific customer in the database.
+     *
+     * @param custName Updated name of the customer.
+     * @param custAddress Updated address of the customer.
+     * @param custPhoneNumber Updated phone number of the customer.
+     * @param divisionId Updated division ID associated with the customer.
+     * @param custPostalCode Updated postal code of the customer.
+     * @param customerId ID of the customer being updated.
+     * @return Number of rows affected.
+     */
     @Override
     public int customerUpdate(String custName, String custAddress, String custPhoneNumber,
                               int divisionId, String custPostalCode, int customerId) {
@@ -158,6 +205,12 @@ public class CustomerDAOImpl implements CustomerDAO{
     }
 
 
+    /**
+     * Deletes a specific customer from the database.
+     *
+     * @param customerId ID of the customer to be deleted.
+     * @return Number of rows affected.
+     */
     @Override
     public int customerDelete(int customerId) {
         try {
@@ -169,6 +222,7 @@ public class CustomerDAOImpl implements CustomerDAO{
 
             if (rowsAffected > 0) {
                 System.out.println("Customer [" + customerId + "] was successfully deleted.");
+
             }
 
             return rowsAffected;
