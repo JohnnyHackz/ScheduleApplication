@@ -31,22 +31,4 @@ public interface DivisionDAO {
      */
     ObservableList<Division> getDivByCountries(int countryId);
 
-    /**
-     * Adds a new division with the specified name and associated country ID.
-     *
-     * @param divisionName The name of the new division to add.
-     * @param countryId The ID of the country associated with the new division.
-     * @return The ID of the added division.
-     */
-    int addDivisionByName(String divisionName, int countryId);
-
-    /**
-     * Updates the name of an existing division based on its current name and associated country ID.
-     *
-     * @param currentDivisionName The current name of the division to update.
-     * @param countryId The ID of the country associated with the division.
-     * @param newDivisionName The new name to set for the division.
-     * @return The number of rows affected by the update.
-     */
-    int updateDivNamebyCountry(String currentDivisionName, int countryId, String newDivisionName);
 }

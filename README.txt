@@ -29,8 +29,8 @@ Lambda expression #1: The lambda expression in question listens for changes to t
 when the selected item in the ComboBox changes, the lambda expression is executed. Inside this expression, a check is made to ensure that the new selection (newValue) is
 not null. If there is a valid new selection, the fillTable() method is called to update the table based on the contact that's been selected. Utilizing a lambda expression
 in this context is both efficient and readable. It provides a succinct way to define the behavior we want (updating the table) in response to a specific event (a change in
-the ComboBox's selection). Without the lambda, we would need to create a full anonymous inner class, which would be more verbose for such a straightforward operation.
-The lambda expression offers a more concise, intuitive, and maintainable approach to handle this event-driven behavior.
+the ComboBox's selection). Without the lambda, I would need to create a full anonymous inner class, which would be more verbose for such a straightforward operation.
+The lambda expression offers a more concise and maintainable approach to handle this    behavior.
 
 Lambda expression #2: In the addAppointmentController, I've incorporated lambda expressions to manage certain UI interactions, especially the synchronization between start
 and end times/dates. Using a lambda expression in this context offers a concise way to represent event-handling logic. Instead of using more verbose structures, lambda expressions

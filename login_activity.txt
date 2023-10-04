@@ -65,3 +65,11 @@
 
 2023-10-03T10:50:04.971063400 - User: test, Login Attempt: Successful
 
+2023-10-03T21:34:53.493035200 - User: test, Login Attempt: Successful
+
+2023-10-03T21:38:54.873100800 - User: admin, Login Attempt: Successful
+
+2023-10-03T21:47:35.973117200 - User: test, Login Attempt: Successful
+
+2023-10-03T21:58:03.905344100 - User: test, Login Attempt: Successful
+
