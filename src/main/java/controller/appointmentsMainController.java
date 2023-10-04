@@ -147,7 +147,7 @@ public class appointmentsMainController {
                 successAlert.setContentText("Appointment with ID: " + appointmentId + " and type: " + selectedAppointment.getApptType() + " was successfully canceled.");
                 successAlert.showAndWait();
 
-                mainScreenAppointmentsTable.setItems(appointmentDAO.getAllAppointments()); // Refresh the appointments table
+                mainScreenAppointmentsTable.setItems(appointmentDAO.getAllAppointments());
             } else {
                 Alert failureAlert = new Alert(Alert.AlertType.ERROR);
                 failureAlert.setTitle("Deletion Failed");
@@ -293,8 +293,6 @@ public class appointmentsMainController {
         // Fetches the appointments for the current month using the combined method.
         mainScreenAppointmentsTable.setItems(appointmentDao.upcomingAppts(today, "month"));
 
-        // closes the database connection
-        //JDBC.closeConnection();
     }
 
 
@@ -311,8 +309,6 @@ public class appointmentsMainController {
         // Fetches all appointments
         mainScreenAppointmentsTable.setItems(appointmentDAO.getAllAppointments());
 
-        // closes the database connection
-        //JDBC.closeConnection();
     }
 
 
@@ -326,7 +322,6 @@ public class appointmentsMainController {
 
         System.out.println("Appointment Schedule (Main Menu): I am initialized!");
 
-        //userTimeZoneLbl.setText("Your Time Zone: " + String.valueOf(ZoneId.systemDefault()));
 
         // Appointments tableview
         appIDCol.setCellValueFactory(new PropertyValueFactory<>("apptId"));
@@ -374,7 +369,5 @@ public class appointmentsMainController {
         // Fetches the appointments for the current month using the combined method.
         mainScreenAppointmentsTable.setItems(appointmentDao.upcomingAppts(today, "week"));
 
-        // closes the database connection after the operation
-        //JDBC.closeConnection();
     }
 }

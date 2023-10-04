@@ -11,16 +11,19 @@ import java.sql.SQLException;
 import static helper.JDBC.connection;
 
 /**
- * Implementation of the CustomerDAO interface, providing methods for
- * CRUD operations on Customer objects.
+ * Implementation of the CustomerDAO interface for managing operations related to the Customer model.
  */
 public class CustomerDAOImpl implements CustomerDAO{
     ObservableList<Customer> allCustomers = FXCollections.observableArrayList();
 
     /**
-     * Fetches all customers from the database and returns them as an ObservableList.
+     * Fetches all customers with their associated division and country info from the database.
      *
-     * @return ObservableList of all customers.
+     * This method clears the allCustomers list, then queries the database to populate it
+     * with customer details stored in the Customer class.
+     *
+     * @return ObservableList of customers.
+     * @throws SQLException
      */
     @Override
     public ObservableList<Customer> getAllCustomers() {
@@ -62,66 +65,61 @@ public class CustomerDAOImpl implements CustomerDAO{
      */
     @Override
     public Customer getCustomerId(int customerId) {
-        try {
-            String sql = "SELECT * FROM client_schedule.customers WHERE Customer_ID=?";
-            PreparedStatement ps = connection.prepareStatement(sql);
+        String sql = "SELECT * FROM client_schedule.customers WHERE Customer_ID=?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, customerId);
-
-            ResultSet result = ps.executeQuery();
-
-            if (result.next()) {
-                customerId = result.getInt("Customer_ID");
-                String custName = result.getString("Customer_Name");
-                int countryId = result.getInt("Country_ID");
-                String custAddress = result.getString("Address");
-                String custPostalCode = result.getString("Postal_Code");
-                String custPhoneNumber = result.getString("Phone");
-                int divisionId = result.getInt("Division_ID");
-                String custcountryName = result.getString("Country");
-                String custDivisionName = result.getString("Division");
-
-                return new Customer(customerId, custName, countryId, custAddress, custPostalCode, custPhoneNumber,
-                        divisionId, custcountryName, custDivisionName);
+            try (ResultSet result = ps.executeQuery()) {
+                if (result.next()) {
+                    return buildCustomerFromResult(result);
+                }
             }
         } catch (SQLException e) {
             System.out.println("Error getting customer by ID: " + e.getMessage());
             e.printStackTrace();
         }
-
         return null;
+    }
+
+    /**
+     * Constructs a Customer object from a given ResultSet.
+     *
+     * @param result The ResultSet containing customer details.
+     * @return Customer object constructed from the ResultSet.
+     * @throws SQLException
+     */
+    private Customer buildCustomerFromResult(ResultSet result) throws SQLException {
+        int customerId = result.getInt("Customer_ID");
+        String custName = result.getString("Customer_Name");
+        int countryId = result.getInt("Country_ID");
+        String custAddress = result.getString("Address");
+        String custPostalCode = result.getString("Postal_Code");
+        String custPhoneNumber = result.getString("Phone");
+        int divisionId = result.getInt("Division_ID");
+        String custcountryName = result.getString("Country");
+        String custDivisionName = result.getString("Division");
+
+        return new Customer(customerId, custName, countryId, custAddress, custPostalCode, custPhoneNumber,
+                divisionId, custcountryName, custDivisionName);
     }
 
 
     /**
-     * Gets all customers associated with a specific division ID.
+     * Fetches a list of customers associated with a specific division ID from the database.
      *
-     * @param divisionId ID of the division.
-     * @return ObservableList of customers associated with the division.
+     * @param divisionId The ID of the division by which customers are filtered.
+     * @return an ObservableList of customers belonging to the specified division.
      */
     @Override
     public ObservableList<Customer> getCustomerByDivisionID(int divisionId) {
         ObservableList<Customer> customersByDivision = FXCollections.observableArrayList();
+        String sql = "SELECT * FROM client_schedule.customers WHERE Division_ID=?";
 
-        try {
-            String sql = "SELECT * FROM client_schedule.customers WHERE Division_ID=?";
-            PreparedStatement ps = connection.prepareStatement(sql);
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, divisionId);
-
-            ResultSet result = ps.executeQuery();
-
-            while (result.next()) {
-                int customerId = result.getInt("Customer_ID");
-                String custName = result.getString("Customer_Name");
-                int countryId = result.getInt("Country_ID");
-                String custAddress = result.getString("Address");
-                String custPostalCode = result.getString("Postal_Code");
-                String custPhoneNumber = result.getString("Phone");
-                String custcountryName = result.getString("Country");
-                String custDivisionName = result.getString("Division");
-
-                Customer customer = new Customer(customerId, custName, countryId, custAddress, custPostalCode, custPhoneNumber,
-                        divisionId, custcountryName, custDivisionName);
-                customersByDivision.add(customer);
+            try (ResultSet result = ps.executeQuery()) {
+                while (result.next()) {
+                    customersByDivision.add(buildCustomerFromResult(result));
+                }
             }
         } catch (SQLException e) {
             System.out.println("Error getting customers by Division ID: " + e.getMessage());
@@ -191,8 +189,6 @@ public class CustomerDAOImpl implements CustomerDAO{
             int rowsAffected = ps.executeUpdate();
 
             if (rowsAffected > 0) {
-                // If the update was successful, update the local list (assuming you have a method to do this)
-                //updateLocalCustomerList(customerId, custName, custPostalCode, custPhoneNumber, divisionId);
                 System.out.println("Update Successful.");
             }
 

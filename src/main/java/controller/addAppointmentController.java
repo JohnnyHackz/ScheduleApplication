@@ -100,19 +100,19 @@ public class addAppointmentController implements Initializable {
 
     /**
      * Handles the action event for the "Add Appointment Save" button.
-     * <p>
+     *
      * This method attempts to:
-     * <ol>
-     *     <li>Retrieve and validate input from various appointment fields.</li>
-     *     <li>Check for time validity and overlapping appointments.</li>
-     *     <li>Add the appointment to the database.</li>
-     *     <li>Load the main appointments view upon successful addition.</li>
-     * </ol>
+     *
+     * Retrieve and validate input from various appointment fields.
+     * Check for time validity and overlapping appointments.
+     * Add the appointment to the database.
+     * Load the main appointments view upon successful addition.
+     *
      * Any errors or issues encountered during these operations will trigger appropriate error alerts.
-     * </p>
+     *
      *
      * @param event The action event that initiated this method call.
-     * @throws IOException if an I/O error occurs.
+     * @throws IOException
      */
     @FXML
     void onActionAddAppointmentSaveButton(ActionEvent event) throws IOException {
@@ -257,12 +257,9 @@ public class addAppointmentController implements Initializable {
                 addAppointmentStartDate.setValue(LocalDate.now());
                 addAppointmentEndDate.setValue(LocalDate.now());
 
-
-                //addAppointmentStartTime.setItems(TimeUtil.generateBusinessHours(opsZoneId, officZoneId, srtTime, hoursOfOperation));
                 addAppointmentStartTime.setItems(TimeUtil.openForBusiness(opsZoneId, officZoneId, srtTime, endTime));
                 addAppointmentStartTime.getSelectionModel().selectFirst();
 
-                //addAppointmentEndTime.setItems(TimeUtil.generateBusinessHours(opsZoneId, officZoneId, srtTime, hoursOfOperation));
                 addAppointmentEndTime.setItems(TimeUtil.openForBusiness(opsZoneId, officZoneId, srtTime, endTime));
                 addAppointmentEndTime.getSelectionModel().selectFirst();
 
@@ -272,14 +269,34 @@ public class addAppointmentController implements Initializable {
                     addAppointmentEndTime.getSelectionModel().selectFirst();
                 }
 
-                // 1st lambda expressions here
+                /**
+                 * LAMBDA # 2
+                 *
+                 * Lambda expression to keep the end date synchronized with the start date.
+                 *
+                 *
+                 * This listener ensures that if the start date is modified to be after the end date,
+                 * the end date is automatically adjusted to match the new start date.
+                 *
+                 */
+                // 2nd lambda expressions here
                 addAppointmentStartDate.valueProperty().addListener((obs, oldDate, newDate) -> {
                     if (newDate.isAfter(addAppointmentEndDate.getValue())) {
                         addAppointmentEndDate.setValue(newDate);
                     }
                 });
 
-                // 2nd lambda expressions here
+                /**
+                 * LAMBDA # 3
+                 *
+                 * Lambda expression to adjust the end time based on the start time.
+                 *
+                 *
+                 * This listener ensures that if the start time is selected to be after the end time,
+                 * the end time is automatically set to be an hour after the new start time.
+                 *
+                 */
+                // 3rd lambda expressions here
                 addAppointmentStartTime.valueProperty().addListener((obs, oldTime, newTime) -> {
                     if (newTime.isAfter(addAppointmentEndTime.getValue())) {
                         addAppointmentEndTime.setValue(newTime.plusHours(1));

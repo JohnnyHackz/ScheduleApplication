@@ -11,10 +11,10 @@ import java.util.ResourceBundle;
 
 /**
  * A utility class providing helper methods to display various alerts to the user.
- * <p>
+ *
  * This class contains methods to show error and information alerts,
  * print exception stack traces, and display localized login error messages.
- * </p>
+ *
  */
 public class AlertHelper {
 
@@ -59,17 +59,17 @@ public class AlertHelper {
             alert.setContentText(errorMessage);
             alert.showAndWait();
 
-            // Print the stack trace to the console
+            // Print the stack trace to console
             e.printStackTrace();
         }
 
     /**
      * Displays a localized login error message to the user.
-     * <p>
+     *
      * This method attempts to retrieve the appropriate localized error message
      * based on the system's default locale. If the resource bundle is missing,
      * a message is printed to the console.
-     * </p>
+     *
      */
     public static void showLocalizedLoginError() {
         try {
@@ -95,11 +95,11 @@ public class AlertHelper {
 
     /**
      * Utility method for showing a confirmation alert dialog and capturing the user's decision.
-     * <p>
+     *
      * This method displays a confirmation dialog box with the given title and content message.
      * It then waits for the user to either confirm or cancel the action. If the user confirms,
      * the method returns {@code true}. Otherwise, it returns {@code false}.
-     * </p>
+     *
      *
      * @param titleSet    The title of the alert dialog.
      * @param contentSet  The content message to be displayed in the dialog.

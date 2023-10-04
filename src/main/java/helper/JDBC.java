@@ -7,11 +7,11 @@ import java.sql.SQLException;
 
 /**
  * A utility class for managing JDBC database connections.
- * <p>
+ *
  * The class provides helper methods for opening, accessing, and closing JDBC database connections.
  * It also aids in the preparation of SQL statements and manages connection details such as the JDBC URL,
  * username, and password.
- * </p>
+ *
  */
 public class JDBC {
     private static PreparedStatement preparedStatement;

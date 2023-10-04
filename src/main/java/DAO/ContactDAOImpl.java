@@ -29,7 +29,6 @@ public class ContactDAOImpl implements ContactDAO {
     public ObservableList<Contact> getAllContacts() {
         try {
             if (connection == null || !connection.isValid(5)) {
-                // Handle the situation where the connection is null or not valid
             }
 
             String sql = "Select * from contacts;";
@@ -58,7 +57,7 @@ public class ContactDAOImpl implements ContactDAO {
      */
     @Override
     public Contact getContact(int contactId) throws SQLException {
-        return null; // Placeholder implementation
+        return null;
     }
 
     /**
@@ -70,7 +69,7 @@ public class ContactDAOImpl implements ContactDAO {
      */
     @Override
     public int updateContact(Contact contact) throws SQLException {
-        return 0; // Placeholder implementation
+        return 0;
     }
 
     /**
@@ -82,7 +81,7 @@ public class ContactDAOImpl implements ContactDAO {
      */
     @Override
     public int insertContact(String contactName) throws SQLException {
-        return 0; // Placeholder implementation
+        return 0;
     }
 
     /**
@@ -93,6 +92,6 @@ public class ContactDAOImpl implements ContactDAO {
      */
     @Override
     public int deleteContact(int contactId) {
-        return 0; // Placeholder implementation
+        return 0;
     }
 }

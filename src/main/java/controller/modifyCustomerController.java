@@ -26,11 +26,11 @@ import java.util.ResourceBundle;
 
 /**
  * Controller for the Modify Customer View.
- * <p>
+ *
  * This controller facilitates the functionality needed to modify an existing customer.
  * It provides functionalities to fetch details from the form fields,
  * extract customer details to update, and handle actions for the "Save" and "Cancel" buttons.
- * </p>
+ *
  */
 public class modifyCustomerController implements Initializable {
 
@@ -122,7 +122,7 @@ public class modifyCustomerController implements Initializable {
     /**
      * Fetches customer details from the form fields.
      *
-     * @return an instance of {@link CustomerData} containing the extracted form details or null if an error occurs
+     * @return an instance of CustomerData containing the extracted form details or null if an error occurs
      */
     private CustomerData getCustomerDataFromForm() {
         try {
@@ -181,12 +181,12 @@ public class modifyCustomerController implements Initializable {
 
     /**
      * Populates the modify customer form with the details of a selected customer.
-     * <p>
+     *
      * This method fetches the details of a given customer and sets the relevant form fields
      * with the respective values. It also manages the country and division selection for
      * the customer, ensuring that the appropriate country and division options are pre-selected
      * based on the customer's existing data.
-     * </p>
+     *
      * @param pickedCustomer the customer to be modified
      */
     public void updateCustomer(Customer pickedCustomer) {

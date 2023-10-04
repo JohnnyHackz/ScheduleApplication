@@ -54,7 +54,7 @@ public class reportsDivisionTotalController {
             DivisionDataDAO divisionDataDAO = new DivisionDataDAOImpl();
             reportsTotalCustOfDivisionTableview.setItems(divisionDataDAO.getAllDivisionData());
         } finally {
-            JDBC.closeConnection(); // Close the connection when done
+            JDBC.closeConnection();
         }
     }
 }

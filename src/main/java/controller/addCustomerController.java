@@ -127,8 +127,6 @@ public class addCustomerController implements Initializable {
             stage.setScene(new Scene(scene));
             stage.show();
         } else {
-            // Handle the case where the customer couldn't be added (e.g., display an error message)
-            // You can implement this according to your application's requirements.
             System.out.println("Error: Customer not added.");
         }
         navigateToMainView(event);

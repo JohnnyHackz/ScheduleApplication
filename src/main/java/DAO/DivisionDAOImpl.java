@@ -23,8 +23,7 @@ public class DivisionDAOImpl implements DivisionDAO {
      */
     @Override
     public ObservableList<Division> getAllDivisions() {
-        // Clear the list to avoid adding duplicate entries upon subsequent calls
-        everyDivision.clear();
+        // Clear the list to avoid adding duplicate entries
 
         String sql = "SELECT first_level_divisions.Division_ID, first_level_divisions.Division, " +
                 "countries.Country_ID, countries.Country " +
@@ -88,7 +87,7 @@ public class DivisionDAOImpl implements DivisionDAO {
      * The results include details about the divisions as well as their associated country.
      *
      * @param countryId the ID of the country for which the divisions are to be fetched
-     * @return an {@code ObservableList<Division>} containing the divisions related to the specified country
+     * @return anObservableList containing the divisions related to the specified country
      * @throws SQLException if any database operation fails during the process
      */
     @Override
@@ -123,89 +122,4 @@ public class DivisionDAOImpl implements DivisionDAO {
     }
 
 
-    /**
-     * Executes the insert operation on the database for the provided division name and country ID.
-     *
-     * This is a helper method that performs the actual SQL insert. It prepares and executes
-     * an SQL statement to add a new division with the given name and associated country ID.
-     *
-     * @param divisionName the name of the division to be inserted
-     * @param countryId the ID of the country to which the division belongs
-     * @return the number of rows affected by the insert operation, or 0 if an exception occurred
-     */
-    private int executeInsert(String divisionName, int countryId) {
-        String sql = "INSERT INTO first_level_divisions (Division, Country_ID) VALUES(?,?)";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, divisionName);
-            ps.setInt(2, countryId);
-            return ps.executeUpdate();
-        } catch (Exception e) {
-            System.out.println("Error inserting division: " + e.getMessage());
-            return 0;
-        }
-    }
-
-
-    /**
-     * Logs the result of the insert operation.
-     *
-     * This method provides feedback on whether the insert operation was successful or not.
-     * It logs a success message if rows were affected (i.e., the insert was successful),
-     * otherwise, it logs a failure message.
-     *
-     * @param rowsAffected the number of rows that were affected by the last insert operation
-     */
-    private void logInsertResult(int rowsAffected) {
-        if (rowsAffected > 0) {
-            System.out.println("Division INSERT was successful!");
-        } else {
-            System.out.println("Division INSERT failed!");
-        }
-    }
-
-
-    /**
-     * Executes the update operation on the database for the division's name.
-     *
-     * This is a helper method that performs the actual SQL update. It prepares and executes
-     * an SQL update statement to modify the division's name for a specific country.
-     *
-     * @param currentDivisionName the current name of the division to be updated
-     * @param countryId the ID of the country where the division resides
-     * @param newDivisionName the new name to be set for the division
-     * @return the number of rows affected by the update, or 0 if an exception occurred
-     */
-    private int executeUpdate(String currentDivisionName, int countryId, String newDivisionName) {
-        String sql = "UPDATE first_level_divisions SET Division=? WHERE Division=? AND Country_ID=?";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, newDivisionName);
-            ps.setString(2, currentDivisionName);
-            ps.setInt(3, countryId);
-            return ps.executeUpdate();
-        } catch (Exception e) {
-            System.out.println("Error updating division name: " + e.getMessage());
-            return 0;
-        }
-    }
-
-
-    /**
-     * Logs the result of the update operation.
-     *
-     * This method provides feedback on whether the update operation was successful or not.
-     * It logs a success message if rows were affected (i.e., the update was successful),
-     * otherwise, it logs a failure message.
-     *
-     * @param currentDivisionName the current name of the division
-     * @param newDivisionName the new name that was attempted to set for the division
-     * @param rowsAffected the number of rows that were affected by the last update operation
-     */
-    private void logUpdateResult(String currentDivisionName, String newDivisionName, int rowsAffected) {
-        if (rowsAffected > 0) {
-            System.out.println(currentDivisionName + " division UPDATE was successful!");
-            System.out.println("New division name: " + newDivisionName);
-        } else {
-            System.out.println(currentDivisionName + " division name UPDATE Failed!");
-        }
-    }
 }

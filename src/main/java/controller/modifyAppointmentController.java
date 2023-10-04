@@ -26,10 +26,10 @@ import java.time.ZoneId;
 import java.util.ResourceBundle;
 /**
  * Controller for the modify appointment view in a JavaFX application.
- * <p>
+ *
  * This controller is responsible for handling actions related to modifying existing appointments, including
  * saving changes to the database, validating form data, and populating fields with the selected appointment's details.
- * </p>
+ *
  */
 public class modifyAppointmentController implements Initializable {
     @FXML
@@ -71,10 +71,10 @@ public class modifyAppointmentController implements Initializable {
 
     /**
      * Handles the save button action.
-     * <p>
+     *
      * Retrieves appointment details from the form, validates input, checks for overlapping appointments,
      * and updates the appointment in the database.
-     * </p>
+     *
      *
      * @param event the ActionEvent triggered by the button click
      * @throws IOException if there's an issue loading the next view
@@ -175,17 +175,17 @@ public class modifyAppointmentController implements Initializable {
     }
 
     /**
-     * Extracts appointment details from the form fields and creates an {@link AppointmentData} instance.
-     * <p>
+     * Extracts appointment details from the form fields and creates an AppointmentData instance.
+     *
      * This method reads the values from the form fields, creates a LocalDateTime for the start and end times,
      * and initializes a new AppointmentData object using these details. The method provides error handling
      * for common exceptions like NumberFormatException and NullPointerException, showing appropriate alert dialogs
      * using the AlertHelper utility.
-     * </p>
+     *
      *
      * @return an instance of AppointmentData containing the extracted form details, or null if any error occurs
      * @throws NumberFormatException if parsing numeric fields like ID fails
-     * @throws NullPointerException if any of the required fields are missing or null
+     * @throws NullPointerException if any of the required fields are null
      * @see AppointmentData
      */
     private AppointmentData getAppointmentDataFromForm() {
@@ -219,9 +219,9 @@ public class modifyAppointmentController implements Initializable {
 
     /**
      * Handles the cancel button action.
-     * <p>
+     *
      * Returns the user to the main appointment view without saving any changes.
-     * </p>
+     *
      *
      * @param event the ActionEvent triggered by the button click
      * @throws IOException if there's an issue loading the main view
@@ -235,9 +235,9 @@ public class modifyAppointmentController implements Initializable {
 
     /**
      * Populates the form fields with the details of the selected appointment.
-     * <p>
+     *
      * This is typically called when transitioning to the modify appointment view, to pre-fill the form with the existing details.
-     * </p>
+     *
      *
      * @param pickedAppointment the appointment selected for modification
      */
@@ -289,9 +289,9 @@ public class modifyAppointmentController implements Initializable {
 
     /**
      * Initializes the view components.
-     * <p>
+     *
      * Sets default values and populates comboboxes. This method is called automatically by JavaFX.
-     * </p>
+     *
      *
      * @param url a reference to the location of the FXML file
      * @param resourceBundle a reference to the localized strings, if any

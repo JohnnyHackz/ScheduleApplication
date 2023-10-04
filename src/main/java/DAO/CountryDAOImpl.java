@@ -90,7 +90,6 @@ public class CountryDAOImpl implements CountryDAO {
      */
     @Override
     public Country getCountryByName(String nameOfCountry) {
-        // This method has not been implemented yet.
         return null;
     }
 
@@ -101,7 +100,6 @@ public class CountryDAOImpl implements CountryDAO {
      */
     @Override
     public ObservableList<Country> getCountryById() {
-        // This method has not been implemented yet.
         return null;
     }
 }

@@ -71,7 +71,7 @@ public class reportsContactController {
      * Handles the action of navigating back to the main reports page.
      *
      * @param actionEvent the event triggered by the user's action.
-     * @throws IOException if there's an error during the scene transition.
+     * @throws IOException
      */
     public void onActionReportsBackButton(ActionEvent actionEvent) throws IOException {
         stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
@@ -160,6 +160,22 @@ public class reportsContactController {
         reportsContactInformationContactsComboBox.setItems(contactDAO.getAllContacts());
         JDBC.closeConnection();
 
+        /**
+         * LAMBDA #1
+         *
+         * Sets up a listener for the reportsContactInformationContactsComboBox ComboBox's selection.
+         *
+         * This listener uses a lambda expression to monitor changes to the selected item of the
+         * reportsContactInformationContactsComboBox. When a new contact is selected in the ComboBox,
+         * the listener triggers. To ensure no null selections are processed, the lambda checks the new
+         * value before any further action. If a valid contact is selected, it calls the fillTable()
+         * method to refresh the table with data related to the selected contact.
+         *
+         *
+         * Using a lambda expression in this context provides efficiency and readability, avoiding the
+         * verbosity of an anonymous inner class for such a straightforward event-handling operation.
+         *
+         */
         reportsContactInformationContactsComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 fillTable(); // Update table on contact selection

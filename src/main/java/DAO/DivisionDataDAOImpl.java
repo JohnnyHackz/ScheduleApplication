@@ -48,7 +48,6 @@ public class DivisionDataDAOImpl implements DivisionDataDAO {
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
             e.printStackTrace();
-            // Handle exceptions appropriately
         }
 
         return allDivisionData;

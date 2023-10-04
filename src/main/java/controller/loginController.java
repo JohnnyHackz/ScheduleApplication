@@ -26,7 +26,6 @@ import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
@@ -183,14 +182,6 @@ public class loginController implements Initializable {
         }
         // No need for finally block since try-with-resources will handle the resource closure
         return null;
-    }
-
-    private PreparedStatement createPreparedStatement(Connection conn, String userName, String password) throws SQLException {
-        String sql = "SELECT * FROM users WHERE User_Name=? AND Password=?";
-        PreparedStatement ps = conn.prepareStatement(sql);
-        ps.setString(1, userName);
-        ps.setString(2, password);
-        return ps;
     }
 
     /**

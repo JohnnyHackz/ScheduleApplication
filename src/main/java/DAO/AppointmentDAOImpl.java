@@ -65,17 +65,13 @@ public class AppointmentDAOImpl implements AppointmentDAO {
                                     LocalTime startTime = startDtTime.toLocalTime();
                                     LocalTime endTime = endDtTime.toLocalTime();
 
-                                    // Create an Appointment object using the retrieved data
                                     return new Appointment(apptId, customerId, userId, contactId, apptTitle, apptDesc,
                                             apptLocation, apptType, startDtTime, endDtTime, startDate, endDate, startTime, endTime);
                                 } catch (SQLException e) {
-                                    // If a SQLException occurs during this process, rethrow it as a RuntimeException for error handling
                                     throw new RuntimeException("Error occurred while fetching appointments.", e);
                                 }
                             })
-                            // Use takeWhile to continue generating Appointment objects until a null is encountered (end of results)
                             .takeWhile(Objects::nonNull)
-                            // Collect the generated Appointment objects into an immutable list
                             .toList()
             );
 
@@ -127,12 +123,10 @@ public class AppointmentDAOImpl implements AppointmentDAO {
             }
 
         } catch (SQLException e) {
-            // Handle SQLException properly
             System.err.println("SQL Error: " + e.getMessage());
             e.printStackTrace();
             throw new RuntimeException("Error occurred while fetching the appointments.", e);
         } catch (Exception e) {
-            // Handle other exceptions
             System.err.println("Error: " + e.getMessage());
             e.printStackTrace();
             throw new RuntimeException("Error occurred while fetching the appointments.", e);
@@ -292,7 +286,7 @@ public class AppointmentDAOImpl implements AppointmentDAO {
             int rowsUpdated = ps.executeUpdate();
 
             if (rowsUpdated > 0) {
-                // Rows were updated successfully, return a positive value to indicate success
+                // Rows were updated successfully
                 return rowsUpdated;
             }
         } catch (SQLException e) {
@@ -307,7 +301,7 @@ public class AppointmentDAOImpl implements AppointmentDAO {
             throw new RuntimeException("Error occurred while updating the appointment.", e);
         }
 
-        // Return 0 if no rows were updated (indicating a failure to update the appointment)
+        // Return 0 if no rows were updated
         return 0;
     }
 
@@ -329,7 +323,7 @@ public class AppointmentDAOImpl implements AppointmentDAO {
             int rowsDeleted = ps.executeUpdate();
 
             if (rowsDeleted > 0) {
-                // Rows were deleted successfully, return a positive value to indicate success
+                // Rows were deleted successfully
                 return rowsDeleted;
             }
         } catch (SQLException e) {
@@ -344,7 +338,7 @@ public class AppointmentDAOImpl implements AppointmentDAO {
             throw new RuntimeException("Error occurred while deleting the appointment.", e);
         }
 
-        // Return 0 if no rows were deleted (indicating a failure to delete the appointment)
+        // Return 0 if no rows were deleted
         return 0;
     }
 
@@ -383,7 +377,7 @@ public class AppointmentDAOImpl implements AppointmentDAO {
             int rowsInserted = ps.executeUpdate();
 
             if (rowsInserted > 0) {
-                // Rows were inserted successfully, return a positive value to indicate success
+                // Rows were inserted successfully
                 return rowsInserted;
             }
         } catch (SQLException e) {
@@ -398,7 +392,7 @@ public class AppointmentDAOImpl implements AppointmentDAO {
             throw new RuntimeException("Error occurred while adding the appointment.", e);
         }
 
-        // Return 0 if no rows were inserted (indicating a failure to add the appointment)
+        // Return 0 if no rows were inserted
         return 0;
     }
 
@@ -480,10 +474,10 @@ public class AppointmentDAOImpl implements AppointmentDAO {
     public boolean appointmentOverlap(int customerId, LocalDateTime start, LocalDateTime end) {
         ObservableList<Appointment> appointments = getApptsByCustomer(customerId);
 
-        // Check if the appointments list is null
+
         if(appointments == null) {
             System.err.println("Error: Appointments list is null. Please ensure the data is retrieved correctly.");
-            return false; // Return false or consider throwing an exception if it's a critical error
+            return false;
         }
 
         for (Appointment existingAppt : appointments) {
@@ -523,11 +517,10 @@ public class AppointmentDAOImpl implements AppointmentDAO {
         // Check if the appointments list is null
         if(appointments == null) {
             System.err.println("Error: Appointments list is null. Please ensure the data is retrieved correctly.");
-            return false; // Return false or consider throwing an exception if it's a critical error
+            return false;
         }
 
         for (Appointment existingAppt : appointments) {
-            // Skip the current appointment
             if(existingAppt.getApptId() == apptId) {
                 continue;
             }
